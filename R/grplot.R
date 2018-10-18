@@ -44,8 +44,8 @@ circle = function(rad, orig, ..., n = 100){
 #'   colors either as a color name (see \link{colors}), rgb format (see \link{rgb}), or
 #'   hex format (see \link{col2hex}).
 #' @param weight numeric between 0 and 1 specifying the relative mixing weight for color
-#'   one. E.g., \code{weight = .8} means that final color is composed of 80% \code{col_2}
-#'   and 20% \code{col_1}.
+#'   one. E.g., \code{weight = .8} means that final color is composed of 80 percent
+#'   \code{col_2} and 20 percent \code{col_1}.
 #' @param format character string specifying the output format. Either \code{"hex"} or
 #'   \code{"rgb"}.
 #'
@@ -105,8 +105,9 @@ cmix = function(col_1, col_2, weight, format = 'hex'){
   # average colors
   col = col_1 * (1-weight) + col_2 * weight
 
+  # out
   if(format == 'rgb') return(col / 255)
-  if(format == 'hex') return(grDevices::rgb(data.frame(col), maxColorValue = 255))
+  grDevices::rgb(data.frame(col), maxColorValue = 255)
 
   }
 

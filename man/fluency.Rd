@@ -21,6 +21,8 @@ nodes proportional to their degree. For \code{type = 1} the process
 selects a random node to serve both as the start node and the jump node.
 For \code{type = 2} the process selects the start and any jump nodes
 uniformly at random.}
+
+\item{string}{logical specifying whether the output should be of mode character.}
 }
 \value{
 List of character vectors containing the indices of the fluency productions.

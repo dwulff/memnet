@@ -255,9 +255,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// goni_graph
-CharacterMatrix goni_graph(GenericVector dat, int l, int min_cooc, double crit, int use);
-RcppExport SEXP _memnet_goni_graph(SEXP datSEXP, SEXP lSEXP, SEXP min_coocSEXP, SEXP critSEXP, SEXP useSEXP) {
+// community_graph
+CharacterMatrix community_graph(GenericVector dat, int l, int min_cooc, double crit);
+RcppExport SEXP _memnet_community_graph(SEXP datSEXP, SEXP lSEXP, SEXP min_coocSEXP, SEXP critSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -265,8 +265,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type l(lSEXP);
     Rcpp::traits::input_parameter< int >::type min_cooc(min_coocSEXP);
     Rcpp::traits::input_parameter< double >::type crit(critSEXP);
-    Rcpp::traits::input_parameter< int >::type use(useSEXP);
-    rcpp_result_gen = Rcpp::wrap(goni_graph(dat, l, min_cooc, crit, use));
+    rcpp_result_gen = Rcpp::wrap(community_graph(dat, l, min_cooc, crit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -791,7 +790,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_getplink", (DL_FUNC) &_memnet_getplink, 3},
     {"_memnet_dbinom", (DL_FUNC) &_memnet_dbinom, 3},
     {"_memnet_pbinom", (DL_FUNC) &_memnet_pbinom, 3},
-    {"_memnet_goni_graph", (DL_FUNC) &_memnet_goni_graph, 5},
+    {"_memnet_community_graph", (DL_FUNC) &_memnet_community_graph, 4},
     {"_memnet_rw_graph", (DL_FUNC) &_memnet_rw_graph, 1},
     {"_memnet_threshold_graph", (DL_FUNC) &_memnet_threshold_graph, 2},
     {"_memnet_seed", (DL_FUNC) &_memnet_seed, 2},

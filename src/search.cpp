@@ -108,7 +108,10 @@ GenericVector adjlist_minus1(GenericVector &adjlist){
 //'
 //' @export
 // [[Rcpp::export]]
-std::vector<int> one_fluency(GenericVector adj_list, int n, double pjump, int type){
+std::vector<int> one_fluency(GenericVector adj_list,
+                             int n,
+                             double pjump,
+                             int type){
   int i, j, start, npos, reset, nitem = adj_list.size();
   bool jump = false;
   std::vector<int> items;
@@ -186,7 +189,7 @@ std::vector<int> one_fluency(GenericVector adj_list, int n, double pjump, int ty
 //' @inheritParams one_fluency
 //' @param n integer vector specifying for each sequence the number of
 //'   unique productions.
-//' @string logical specifying whether the output should be of mode character.
+//' @param string logical specifying whether the output should be of mode character.
 //'
 //' @return List of character vectors containing the indices of the fluency productions.
 //'   Indices refer to the row of the item in the original adjacency matrix. See
@@ -239,7 +242,10 @@ GenericVector fluency(GenericVector adjlist,
 //'
 //' @export
 // [[Rcpp::export]]
-std::vector<int> one_ffluency(GenericVector adj_list, int n, double pjump, int type){
+std::vector<int> one_ffluency(GenericVector adj_list,
+                              int n,
+                              double pjump,
+                              int type){
   int i, j, start, npos, reset, nitem = adj_list.size();
   std::vector<int> items;
   std::vector<int> neighbors;
@@ -293,7 +299,7 @@ std::vector<int> one_ffluency(GenericVector adj_list, int n, double pjump, int t
 //' @inheritParams one_ffluency
 //' @param n integer vector specifying for each sequence the maximum numbers of
 //' productions. Function may return fewer than \code{n}.
-//' @string logical specifying whether the output should be of mode character.
+//' @param string logical specifying whether the output should be of mode character.
 //'
 //' @return List of character vectors containing the indices of the fluency productions.
 //'   Indices refer to the row of the item in the original adjacency matrix. See
@@ -428,7 +434,7 @@ GenericVector ffsearch(GenericVector adjlist,
 //' the network and where it jumps to is further controlled
 //' by \code{type}. Neighbors are always selected uniformly.
 //'
-//' In contrast to \link{fluency} and \{ffluency}}, returns the number of steps
+//' In contrast to \link{fluency} and \code{ffluency}, returns the number of steps
 //' required to produce a sequence of unique productions, rather than the
 //' productions itself.
 //'

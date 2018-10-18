@@ -12,8 +12,8 @@ colors either as a color name (see \link{colors}), rgb format (see \link{rgb}), 
 hex format (see \link{col2hex}).}
 
 \item{weight}{numeric between 0 and 1 specifying the relative mixing weight for color
-one. E.g., \code{weight = .8} means that final color is composed of 80% \code{col_2}
-and 20% \code{col_1}.}
+one. E.g., \code{weight = .8} means that final color is composed of 80 percent
+\code{col_2} and 20 percent \code{col_1}.}
 
 \item{format}{character string specifying the output format. Either \code{"hex"} or
 \code{"rgb"}.}

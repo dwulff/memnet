@@ -348,7 +348,7 @@ double pbinom(int k, int n, double p){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//          GONI GRAPH
+//          COMMUNITY GRAPH
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //' Create community graph
@@ -356,9 +356,9 @@ double pbinom(int k, int n, double p){
 //' Create a graph from verbal fluency data by adding edges for words that occur
 //' within a window size \code{l} and retaining those that occur more frequently
 //' than \code{min_cooc} and the expectations number of chance productions co-
-//' occurences based on \code{100(1-crit)%}.
+//' occurences based on \code{1-crit}.
 //'
-//' @param dat
+//' @param dat list of character vectors containing the fluency productions.
 //' @param l an integer specifying the window size. The internal upper limit
 //'   of \code{l} is the number of productions.
 //' @param crit a numeric within \code{[0,1]} specifiying the type-1 error
@@ -372,12 +372,11 @@ double pbinom(int k, int n, double p){
 //'
 //' @export
 // [[Rcpp::export]]
-CharacterMatrix goni_graph(
+CharacterMatrix community_graph(
   GenericVector dat,
   int l        = 3,
   int min_cooc = 1,
-  double crit  = .05,
-  int use = 10000
+  double crit  = .05
   ){
   //std::chrono::high_resolution_clock::time_point t_start, t_end;
   int i, npairs, cnt, igr = 0;
@@ -474,7 +473,7 @@ CharacterMatrix goni_graph(
 //' Create a random walk graph from verbal fluency data that includes edges for words
 //' that occur within a window size of 1.
 //'
-//' @param dat
+//' @param dat list of character vectors containing the fluency productions.
 //'
 //' @return
 //' A matrix
@@ -517,10 +516,10 @@ CharacterMatrix rw_graph(
 //' Create a graph from verbal fluency data by adding edges for words that occur
 //' adjacent to each other more frequently than \code{min_cooc}.
 //'
-//' @param dat
+//' @param dat list of character vectors containing the fluency productions.
 //' @param min_cooc integer specifying the minimum number of times two words
-//'   have to coocur within a window size of \code{l} to consider including
-//'   an edge between them.
+//'   are required to coocur one step apart from each other for an edge to
+//'   connect those words.
 //'
 //' @return
 //' A matrix

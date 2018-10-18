@@ -7,7 +7,7 @@
 rw_graph(dat)
 }
 \arguments{
-\item{dat}{}
+\item{dat}{list of character vectors containing the fluency productions.}
 }
 \value{
 A matrix

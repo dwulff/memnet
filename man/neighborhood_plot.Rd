@@ -4,8 +4,8 @@
 \alias{neighborhood_plot}
 \title{Neighborhood plot}
 \usage{
-neighborhood_plot(adj, node, names = NULL, k, nod_col = "#E0EED4",
-  intensity = 0.5, ...)
+neighborhood_plot(adj, names = NULL, node, k, nod_col = "#E0EED4",
+  nod_shading = TRUE, ...)
 }
 \arguments{
 \item{adj}{numeric matrix representing the adjacency matrix. Can also be an
@@ -13,16 +13,22 @@ object of class \code{"igraph"} or an edge list, i.e., a two-column
 \code{matrix} or \code{data.frame} containing specifying the edges start
 and end points.}
 
-\item{node}{integer specifying the row index (within the adjacency
-matrix) of the node whose the neighborhood should be plotted.
-Alternatively the node name, provided g allows for the extraction
-of a name attribute.}
+\item{node}{optional character vector specifiying the node names.}
 
 \item{k}{integer specifying the size of the neighborhood. Specifically,
 the plot will contain all nodes that are \code{k} or fewer steps away
 from \code{v}.}
 
+\item{nod_col}{character vector of length 1 specifying the node colors.}
+
 \item{\dots}{arguments to be passed to \link{graph_plot}.}
+
+\item{node}{integer specifying the row index (within the adjacency
+matrix) of the node whose the neighborhood should be plotted.
+Alternatively the node name.}
+
+\item{nod_shaing}{logical specifying whether the node colors should be shaded
+as a function of the distance to \code{node}.}
 }
 \value{
 nothing. A plot is created in \link{dev.cur}.

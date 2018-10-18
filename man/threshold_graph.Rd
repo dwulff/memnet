@@ -7,9 +7,11 @@
 threshold_graph(dat, min_cooc = 1L)
 }
 \arguments{
+\item{dat}{list of character vectors containing the fluency productions.}
+
 \item{min_cooc}{integer specifying the minimum number of times two words
-have to coocur within a window size of \code{l} to consider including
-an edge between them.}
+are required to coocur one step apart from each other for an edge to
+connect those words.}
 }
 \value{
 A matrix

@@ -90,9 +90,9 @@ pbinom <- function(k, n, p) {
 #' Create a graph from verbal fluency data by adding edges for words that occur
 #' within a window size \code{l} and retaining those that occur more frequently
 #' than \code{min_cooc} and the expectations number of chance productions co-
-#' occurences based on \code{100(1-crit)%}.
+#' occurences based on \code{1-crit}.
 #'
-#' @param dat
+#' @param dat list of character vectors containing the fluency productions.
 #' @param l an integer specifying the window size. The internal upper limit
 #'   of \code{l} is the number of productions.
 #' @param crit a numeric within \code{[0,1]} specifiying the type-1 error
@@ -105,8 +105,8 @@ pbinom <- function(k, n, p) {
 #' A matrix
 #'
 #' @export
-goni_graph <- function(dat, l = 3L, min_cooc = 1L, crit = .05, use = 10000L) {
-    .Call('_memnet_goni_graph', PACKAGE = 'memnet', dat, l, min_cooc, crit, use)
+community_graph <- function(dat, l = 3L, min_cooc = 1L, crit = .05) {
+    .Call('_memnet_community_graph', PACKAGE = 'memnet', dat, l, min_cooc, crit)
 }
 
 #' Create random walk graph
@@ -114,7 +114,7 @@ goni_graph <- function(dat, l = 3L, min_cooc = 1L, crit = .05, use = 10000L) {
 #' Create a random walk graph from verbal fluency data that includes edges for words
 #' that occur within a window size of 1.
 #'
-#' @param dat
+#' @param dat list of character vectors containing the fluency productions.
 #'
 #' @return
 #' A matrix
@@ -128,10 +128,10 @@ rw_graph <- function(dat) {
 #' Create a graph from verbal fluency data by adding edges for words that occur
 #' adjacent to each other more frequently than \code{min_cooc}.
 #'
-#' @param dat
+#' @param dat list of character vectors containing the fluency productions.
 #' @param min_cooc integer specifying the minimum number of times two words
-#'   have to coocur within a window size of \code{l} to consider including
-#'   an edge between them.
+#'   are required to coocur one step apart from each other for an edge to
+#'   connect those words.
 #'
 #' @return
 #' A matrix
@@ -405,7 +405,7 @@ one_fluency <- function(adj_list, n, pjump, type) {
 #' @inheritParams one_fluency
 #' @param n integer vector specifying for each sequence the number of
 #'   unique productions.
-#' @string logical specifying whether the output should be of mode character.
+#' @param string logical specifying whether the output should be of mode character.
 #'
 #' @return List of character vectors containing the indices of the fluency productions.
 #'   Indices refer to the row of the item in the original adjacency matrix. See
@@ -455,7 +455,7 @@ one_ffluency <- function(adj_list, n, pjump, type) {
 #' @inheritParams one_ffluency
 #' @param n integer vector specifying for each sequence the maximum numbers of
 #' productions. Function may return fewer than \code{n}.
-#' @string logical specifying whether the output should be of mode character.
+#' @param string logical specifying whether the output should be of mode character.
 #'
 #' @return List of character vectors containing the indices of the fluency productions.
 #'   Indices refer to the row of the item in the original adjacency matrix. See
@@ -478,7 +478,7 @@ ffsearch <- function(adjlist, n, pjump = 0, type = 0L, string = FALSE) {
 #' the network and where it jumps to is further controlled
 #' by \code{type}. Neighbors are always selected uniformly.
 #'
-#' In contrast to \link{fluency} and \{ffluency}}, returns the number of steps
+#' In contrast to \link{fluency} and \code{ffluency}, returns the number of steps
 #' required to produce a sequence of unique productions, rather than the
 #' productions itself.
 #'

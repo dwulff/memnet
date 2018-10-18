@@ -32,3 +32,15 @@ Integer vector containing the indices of the fluency productions.
 Generates verbal fluency data using a switcher-random walk process and counts
 the number of steps required to produce \code{n} unique responses.
 }
+\details{
+Function produces verbal fluency data via a switcher random walk
+process that traverses the network by selecting a neighbor with
+probability \code{1-pjump} or jumps to a random place in the network
+with probability \code{pjump}. Where the random walk process enters
+the network and where it jumps to is further controlled
+by \code{type}. Neighbors are always selected uniformly.
+
+In contrast to \link{fluency} and \code{ffluency}, returns the number of steps
+required to produce a sequence of unique productions, rather than the
+productions itself.
+}

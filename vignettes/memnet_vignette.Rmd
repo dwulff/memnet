@@ -1,0 +1,49 @@
+---
+title: "memnet"
+author: "Dirk Wulff"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(memnet)
+
+```
+
+The `memnet` package was build to facilitate research into (semantic) memory using tools from network science. In its current version, the package contains several methods to **infer networks from verbal fluency data**, various **network growth** mechanisms, diverse **(switcher-)random walk processes**, and tools to analyze and visualize networks.
+
+## Networks from verbal fluency data
+
+Verbal fluency is a commonly employed task in cognitive science and neuropsychological diagnostics that requires individuals to retrieve within a limited time window, e.g., 1 minute, as many elements from a natural category as they can. Typically, reseachers interpret the sequences that individuals produce in this task as reflecting the underlying semantic network structure. Several methods have been proposed to infer the network structure from verbal fluency including the three methods implement here: `community_graph`, `threshold_graph`, and `rw_graph`. Of these three, `community_graph` is the most complex. It adds edges for each pair of produced elements that occur within a window of `l` steps and then retains only those that occur more often than `min_cooc` and what is expected by chance giving a false positive rate of `crit`. `threshold_graph` and `rw_graph` are both nested within `community_graph`. The fromer retains `min_cooc` as a parameter but sets `l = 1` and `crit = 1`, implying that only adjacent nodes are considered and that chance expectations are not directly taken into account. The latter sets all parameters to 1 by including edges for every adjacent pair of nodes. The results are illustrated below.
+
+```{r, eval = F}
+# library(memnet)
+# 
+# # get data
+# #data("animal_fluency")
+# 
+# # infer networks
+# net_comunity = community_graph(animal_fluency)
+# net_threshold = threshold_graph(animal_fluency)
+# net_rw = rw_graph(animal_fluency)
+# 
+# # show stats
+# network_stats(net_comunity)
+# network_stats(net_threshold)
+# network_stats(net_rw)
+# 
+# # plot
+# network_plot(net_comunity)
+# network_plot(net_threshold)
+# network_plot(net_rw)
+```
+
