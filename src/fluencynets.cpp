@@ -3,6 +3,9 @@
 #include "helpers.h"
 using namespace Rcpp;
 
+// Enable C++11 via this plugin (Rcpp 0.10.3 or later)
+// [[Rcpp::plugins(cpp11)]]
+
 
 // identifies unique set of string vector (productions of one individual)
 // and returns ordered vector
@@ -20,9 +23,8 @@ std::vector<std::string> set(std::vector<std::string> v){
 std::vector<std::string> mset(GenericVector dat){
   int i, ndat = dat.size();
   std::vector<std::string> allitems;
-  std::vector<std::string> subdat;
   for(i = 0; i < ndat; i++){
-    subdat = dat[i];
+    std::vector<std::string> subdat = dat[i];
     allitems.insert(allitems.end(), subdat.begin(), subdat.end());
     }
   return set(allitems);
@@ -38,10 +40,9 @@ int indx(std::string s, std::vector<std::string> set){
   return pos;
   }
 
-
 // calucalte all distances between productions
 // [[Rcpp::export]]
-GenericVector lags(GenericVector dat, int  l){
+GenericVector lags(GenericVector dat, int  l, bool na_rm = true){
   int i, j, k, n, lim, ndat = dat.size();
   CharacterVector subdat;
   GenericVector res(2);
@@ -55,23 +56,24 @@ GenericVector lags(GenericVector dat, int  l){
       lim = j + l + 1;
       if(lim > n){
         lim = n;
-        }
+       }
       for(k = j + 1; k < lim; k++){
         itemj = std::string(subdat[j]);
         itemk = std::string(subdat[k]);
+        if(na_rm) if(itemj == "NA" || itemk == "NA") continue;
         if(itemj < itemk){
-          ids.push_back(itemj + '-' + itemk);
-          } else {
-          ids.push_back(itemk + '-' + itemj);
-          }
-        dists.push_back(k - j);
+          ids.push_back(itemj + '@' + itemk);
+        } else {
+          ids.push_back(itemk + '@' + itemj);
         }
+        dists.push_back(k - j);
       }
     }
+  }
   res[0] = ids;
   res[1] = dists;
   return res;
-  }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +108,7 @@ NumericMatrix getinds(std::vector<std::string> pairs,
   std::string pair, start, end;
   for(i = 0; i < n; i++){
     pair  = pairs[i];
-    parts = strsplit(pair,"-");
+    parts = strsplit(pair,"@");
     start = parts[0];
     end   = parts[1];
     inds(i,0) = indx(start,unis);
@@ -127,9 +129,9 @@ CharacterMatrix getpairs(std::vector<std::string> spairs, std::string del){
     parts = strsplit(pair, del);
     res(i,0) = parts[0];
     res(i,1) = parts[1];
-  }
+    }
   return res;
-}
+  }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,6 +156,74 @@ std::vector<int> count(std::vector<std::string> v){
   return cnts;
   }
 
+// Creates a range from 0 to n-1
+// [[Rcpp::export]]
+std::vector<int> range(int n){
+  std::vector<int> x(n);
+  for(int i = 0; i < n; ++i) x[i] = i;
+  return x;
+  }
+
+// extracts desired number of indices from range 0 to n-1
+// [[Rcpp::export]]
+std::vector<int> get_indices(int n, int use){
+  std::vector<int> indices = range(n);
+  int remove = n - use;
+  for(int i = 0; i < remove; ++i){
+    std::random_shuffle(indices.begin(), indices.end());
+    indices.pop_back();
+    }
+  return indices;
+  }
+
+// limits string vector to certain indices
+// [[Rcpp::export]]
+std::vector<std::string> cut_stringvec(std::vector<std::string> items, std::vector<int> indices){
+  size_t last = 0;
+  for (size_t i = 0; i < items.size(); i++) {
+    if(inset(i, indices)) {
+      items[last++] = items[i];
+      }
+    }
+  items.erase(items.begin() + last, items.end());
+  return items;
+  }
+
+// limits string vector to certain indices
+// [[Rcpp::export]]
+GenericVector cut_dat(GenericVector dat, GenericVector inds, std::vector<int> indices){
+  std::vector<int> total_ind = inds[2], sub_ind = inds[3], j_ind = inds[4], k_ind = inds[5];
+  int n = total_ind.size();
+  int cur_sub = -1;
+  std::vector<int> cur_inds;
+  std::vector<std::string> subdat;
+  std::vector<std::string> new_subdat;
+  GenericVector newdat(dat.size());
+  for(int i = 0; i < n; ++i){
+    if(sub_ind[i] != cur_sub){
+      cur_sub = sub_ind[i];
+      if(i > 0) newdat[cur_sub - 1] = new_subdat;
+      cur_inds.clear();
+      new_subdat.clear();
+      }
+    std::vector<std::string> subdat = dat[cur_sub];
+    if(inset(i, indices)){
+      int j = j_ind[i];
+      int k = k_ind[i];
+      if(!inset(j, cur_inds)){
+        cur_inds.push_back(j);
+        new_subdat.push_back(subdat[j]);
+        }
+      if(!inset(k, cur_inds)){
+        cur_inds.push_back(k);
+        new_subdat.push_back(subdat[k]);
+        }
+      }
+    }
+  newdat[cur_sub] = new_subdat;
+  return newdat;
+  }
+
 // count occurences across lists of string vectors (productions of
 // all individuals)
 // returns counts in alphabetic order
@@ -161,9 +231,8 @@ std::vector<int> count(std::vector<std::string> v){
 std::vector<int> mcount(GenericVector dat){
   int i, ndat = dat.size();
   std::vector<std::string> allitems;
-  std::vector<std::string> subdat;
   for(i = 0; i < ndat; i++){
-    subdat = dat[i];
+    std::vector<std::string> subdat = dat[i];
     allitems.insert(allitems.end(), subdat.begin(), subdat.end());
     }
   return count(allitems);
@@ -177,9 +246,9 @@ NumericVector getprob(std::vector<int> counts, double N){
   NumericVector probs(n);
   for(i = 0; i < n; i++){
     probs[i] = double(counts[i]) / N;
-  }
+    }
   return probs;
-}
+  }
 
 // calculates probability to be in window
 // see Goni et al. (2009)
@@ -276,18 +345,18 @@ double pbinom(int k, int n, double p){
   }
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //          GONI GRAPH
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//' Create Goni graph
+//' Create community graph
 //'
-//' Creare Goni graph from verbal fluency data. Function creates a graph
-//' by adding edges for words that occur within a window size \code{l}
-//' more frequently than \code{min_cooc} and \code{100(1-crit)%} of
-//' chance productions.
-//'
+//' Create a graph from verbal fluency data by adding edges for words that occur
+//' within a window size \code{l} and retaining those that occur more frequently
+//' than \code{min_cooc} and the expectations number of chance productions co-
+//' occurences based on \code{100(1-crit)%}.
 //'
 //' @param dat
 //' @param l an integer specifying the window size. The internal upper limit
@@ -301,45 +370,58 @@ double pbinom(int k, int n, double p){
 //' @return
 //' A matrix
 //'
+//' @export
 // [[Rcpp::export]]
 CharacterMatrix goni_graph(
   GenericVector dat,
   int l        = 3,
   int min_cooc = 1,
-  double crit  = .05
+  double crit  = .05,
+  int use = 10000
   ){
   //std::chrono::high_resolution_clock::time_point t_start, t_end;
-  int i, nuni, ndat, npairs, cnt, igr = 0;
-  double probinwin, p, ptest;
-  std::vector<std::string> unis, pairsinwin, unipairsinwin;
-  NumericVector freqs, probs, cntpairsinwin, plinked;
-  CharacterMatrix pairs;
-  NumericMatrix pairinds;
+  int i, npairs, cnt, igr = 0;
+  double p, ptest;
+  NumericVector freqs;
   std::vector<std::string> starts;
   std::vector<std::string> ends;
-  std::vector<int> cnts;
 
   //t_start = std::chrono::high_resolution_clock::now();
 
   //number of tests
-  ndat = dat.size();
-  unis = mset(dat);   //in alphabetic order
-  nuni = unis.size();
+  std::vector<std::string> unis = mset(dat);   //in alphabetic order
+  //int nuni = unis.size();
+  int ndat = dat.size();
 
   //determine frequency of pairs
-  pairsinwin    = lags(dat, l)[0];
-  unipairsinwin = set(pairsinwin);
-  cntpairsinwin = count(pairsinwin);
+  GenericVector inwin = lags(dat, l);
+  std::vector<std::string> pairsinwin = inwin[0];
+
+  //get indices
+  //int n_pairs = pairsinwin.size();
+  //if(n_pairs < use) use = n_pairs;
+  //std::vector<int> indices = get_indices(n_pairs, use);
+
+  //limit pairs and dat
+  //pairsinwin = cut_stringvec(pairsinwin, indices);
+  //GenericVector cutdat = cut_dat(dat, inwin, indices);
+
+  //std::cout << pairsinwin.size() << '\n';
+
+  // count pairs
+  std::vector<std::string> unipairsinwin = set(pairsinwin);
+  std::vector<int>         cntpairsinwin = count(pairsinwin);
 
   //determine probabilities
-  cnts      = mcount(dat);
-  probs     = getprob(cnts,ndat);
-  probinwin = mpinwin(lens(dat), l);
-  pairinds  = getinds(unipairsinwin,unis);
-  plinked   = getplink(pairinds,probs,probinwin);
+  //std::vector<int> cnts = mcount(cutdat);
+  std::vector<int> cnts = mcount(dat);
+  NumericVector    probs = getprob(cnts, ndat);
+  double           probinwin = mpinwin(lens(dat), l);
+  NumericMatrix    pairinds = getinds(unipairsinwin, unis);
+  NumericVector    plinked  = getplink(pairinds,probs,probinwin);
 
   //determine probabilities
-  pairs     = getpairs(unipairsinwin, "-");
+  CharacterMatrix pairs = getpairs(unipairsinwin, "@");
   npairs    = plinked.size();
 
   //loop over pairs
@@ -361,11 +443,19 @@ CharacterMatrix goni_graph(
       }
     }
 
+  // identify NA
+  int n_edg = starts.size();
+  std::vector<int> indices;
+  for(int i = 0; i < n_edg; ++i){
+    if(starts[i] != "NA" & ends[i] != "NA") indices.push_back(i);
+    }
+  igr = indices.size();
+
   //fill graph
   CharacterMatrix graph(igr, 2);
   for(i = 0; i < igr; i++){
-    graph(i,0) = starts[i];
-    graph(i,1)  = ends[i];
+    graph(i,0) = starts[indices[i]];
+    graph(i,1)  = ends[indices[i]];
     }
 
   //t_end = std::chrono::high_resolution_clock::now();
@@ -381,8 +471,8 @@ CharacterMatrix goni_graph(
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //' Create random walk graph
 //'
-//' Creare random walk graph from verbal fluency data. Function creates a graph
-//' by adding edges for words that occur within a window size of 1.
+//' Create a random walk graph from verbal fluency data that includes edges for words
+//' that occur within a window size of 1.
 //'
 //' @param dat
 //'
@@ -395,15 +485,13 @@ CharacterMatrix rw_graph(
     ){
   //std::chrono::high_resolution_clock::time_point t_start, t_end;
   int i, npairs;
-  std::vector<std::string> pairsinwin, unipairsinwin;
-  CharacterMatrix pairs;
 
   //t_start = std::chrono::high_resolution_clock::now();
 
   //determine frequency of pairs
-  pairsinwin    = lags(dat, 1)[0];
-  unipairsinwin = set(pairsinwin);
-  pairs     = getpairs(unipairsinwin, "-");
+  std::vector<std::string> pairsinwin = lags(dat, 1)[0];
+  std::vector<std::string> unipairsinwin = set(pairsinwin);
+  CharacterMatrix pairs = getpairs(unipairsinwin, "@");
   npairs    = pairs.nrow();
 
   //fill graph
@@ -419,3 +507,83 @@ CharacterMatrix rw_graph(
   return graph;
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//          THRESHOLD GRAPH
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//' Create threshold graph
+//'
+//' Create a graph from verbal fluency data by adding edges for words that occur
+//' adjacent to each other more frequently than \code{min_cooc}.
+//'
+//' @param dat
+//' @param min_cooc integer specifying the minimum number of times two words
+//'   have to coocur within a window size of \code{l} to consider including
+//'   an edge between them.
+//'
+//' @return
+//' A matrix
+//'
+//' @export
+// [[Rcpp::export]]
+CharacterMatrix threshold_graph(
+    GenericVector dat,
+    int min_cooc = 1
+  ){
+  //std::chrono::high_resolution_clock::time_point t_start, t_end;
+  int i, npairs, cnt, igr = 0;
+  NumericVector freqs;
+  std::vector<std::string> starts;
+  std::vector<std::string> ends;
+
+  //t_start = std::chrono::high_resolution_clock::now();
+
+  //number of tests
+  std::vector<std::string> unis = mset(dat);   //in alphabetic order
+  //int nuni = unis.size();
+
+  //determine frequency of pairs
+  GenericVector inwin = lags(dat, 1);
+  std::vector<std::string> pairsinwin = inwin[0];
+
+  // count pairs
+  std::vector<std::string> unipairsinwin = set(pairsinwin);
+  std::vector<int>         cntpairsinwin = count(pairsinwin);
+
+  //determine probabilities
+  CharacterMatrix pairs = getpairs(unipairsinwin, "@");
+  npairs    = pairsinwin.size();
+
+  //loop over pairs
+  for(i = 0; i < npairs; i++){
+    cnt = cntpairsinwin[i];
+
+    //higher count than min?
+    if(cnt > min_cooc){
+      starts.push_back(std::string(pairs(i,0)));
+      ends.push_back(std::string(pairs(i,1)));
+      igr ++;
+    }
+  }
+
+  // identify NA
+  int n_edg = starts.size();
+  std::vector<int> indices;
+  for(int i = 0; i < n_edg; ++i){
+    if(starts[i] != "NA" & ends[i] != "NA") indices.push_back(i);
+  }
+  igr = indices.size();
+
+  //fill graph
+  CharacterMatrix graph(igr, 2);
+  for(i = 0; i < igr; i++){
+    graph(i,0) = starts[indices[i]];
+    graph(i,1)  = ends[indices[i]];
+  }
+
+  //t_end = std::chrono::high_resolution_clock::now();
+  //std::cout << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " ms\n";
+
+  return graph;
+}

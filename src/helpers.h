@@ -1,6 +1,7 @@
 #ifndef __UTILITIES__
 #define __UTILITIES__
 
+
 //////////////////////////////////////////////////////////////////////////////
 //
 //          GENERIC UTILITIES
@@ -8,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // cumulative sum
-inline Rcpp::NumericVector csum(Rcpp::NumericVector x){
+inline std::vector<double> csum(std::vector<double> x){
   int i, j, n = x.size();
   double cp = 0;
-  Rcpp::NumericVector cumx(n);
+  std::vector<double> cumx(n);
   for(i = 0; i < n; i++){
     for(j = 0; j <= i; j++){
       cp += double(x[j]);
@@ -40,36 +41,11 @@ inline Rcpp::NumericMatrix diagmat(int g, double pout, double pin){
   }
 
 
-// get rank ????
-inline double prbs(Rcpp::NumericVector x, double p){
-  int i = 0;
-  double rp = x[0], n = double(x.size());
-  while(rp <= p){
-    rp += double(x[i]);
-    i++;
-    }
-  return double(i) / n;
-  }
+// get position in cumulative distribution
+double prbs(std::vector<double> x, double p);
 
-// dunno what this does
-inline double trm(Rcpp::NumericVector x, Rcpp::NumericVector y){
-  int i,n,nx = x.size(),ny = y.size();
-  double p, d, dmax = 0;
-  Rcpp::NumericVector cum, cumx = csum(x), cumy = csum(y);
-  if(nx > ny) {
-    n = nx;
-    cum = cumx;
-    } else {
-    n = ny;
-    cum = cumy;
-    }
-  for(i = 1; i < n; i++){
-    p = cum[i];
-    d = std::abs(prbs(cumx,p) - prbs(cumy,p));
-    if(d > dmax) dmax = d;
-    }
-  return dmax;
-  }
+// determine the largest difference between 2 cumulative distributions
+double trm(std::vector<double> x, std::vector<double> y);
 
 // random integer
 inline int rndint(int n){
@@ -136,17 +112,6 @@ std::vector<int> unique_int(std::vector<int> v);
 //
 //////////////////////////////////////////////////////////////////////////////
 
-// convert integer vector into Character vector
-// [[Rcpp::export]]
-inline Rcpp::CharacterVector tostring(std::vector<int> items){
-  int n = items.size();
-  Rcpp::CharacterVector res(n);
-  for(int i = 0; i < n; i++) {
-    res[i] = std::to_string(items[i]);
-    }
-  return res;
-  }
-
 
 // join two integer vectors
 inline std::vector<int> join_int(std::vector<int> a, std::vector<int> b){
@@ -170,6 +135,16 @@ inline std::vector<int> join_int(std::vector<int> a, std::vector<int> b){
 // test if element is in set
 inline bool inset(int el, std::vector<int> set){
   return std::find(set.begin(), set.end(), el) != set.end();
+  }
+
+// test if element is in set
+inline bool inset_str(std::string el, std::vector<std::string> set){
+  return std::find(set.begin(), set.end(), el) != set.end();
+  }
+
+// test if element is in set
+inline bool inset_strset(std::string el, std::set<std::string> set){
+  return set.find(el) != set.end();
   }
 
 // test if edge is in pair

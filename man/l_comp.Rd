@@ -4,14 +4,20 @@
 \alias{l_comp}
 \title{Retrieve largest component}
 \usage{
-l_comp(g)
+l_comp(adj, weights = NULL, mode = "undirected")
 }
 \arguments{
-\item{g}{graph object of class \code{igraph}.}
+\item{adj}{numeric matrix representing the adjacency matrix.}
+
+\item{weights}{numeric vector of edge weights. Optional.}
+
+\item{mode}{character, either \code{"directed"} or \code{"undirected"},
+specifying whether the network should be interepeted as directed
+or undirected. Defaults to \code{"undirected"}.}
 }
 \value{
-A list containing the largest component as an \code{igraph}
-object and the relative size of the largest component compared
+A list containing the, now, named adjacency matrix and a numeric value
+indicating the size of the largest component relative to
 to the entire graph.
 }
 \description{

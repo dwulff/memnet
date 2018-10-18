@@ -10,11 +10,9 @@ get_adjlist(adj)
 \item{adj}{numeric matrix specifying the adjacency matrix.}
 }
 \value{
-A list of vectors containing the indices of adjacent vertices.
+A list of vectors containing the indices of adjacent nodes.
 }
 \description{
-Get list containing adjacent vertices for each vertex in the graph.
-}
-\details{
-Adjacent vertices are returned in terms of their row index of the adjacency matrix.
+Get list containing adjacent, i.e., neighboring, nodes for each node in the
+graph. Nodes are returned as their row indices of the adjacency matrix.
 }

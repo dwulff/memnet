@@ -2,9 +2,9 @@
 % Please edit documentation in R/RcppExports.R
 \name{goni_graph}
 \alias{goni_graph}
-\title{Create Goni graph}
+\title{Create community graph}
 \usage{
-goni_graph(dat, l = 3L, min_cooc = 1L, crit = 0.05)
+goni_graph(dat, l = 3L, min_cooc = 1L, crit = 0.05, use = 10000L)
 }
 \arguments{
 \item{l}{an integer specifying the window size. The internal upper limit
@@ -19,4 +19,7 @@ rate of including an edge between unconnected words.}
 }
 \value{
 A matrix
+}
+\description{
+Create community graph
 }

@@ -2,26 +2,31 @@
 % Please edit documentation in R/measures.R
 \name{aspl}
 \alias{aspl}
-\title{Average shortest path length}
+\title{Average shortest path length (aspl)}
 \usage{
-aspl(g, type = "corrected", directed = FALSE)
+aspl(adj, types = "uncorrected", weights = NULL, mode = "undirected")
 }
 \arguments{
-\item{g}{a graph object of class \code{igraph}.}
+\item{adj}{numeric matrix representing the adjacency matrix.}
 
-\item{directed}{a logical specifying whether the algorithm should
-take edge weights into account \code{igraph}.}
+\item{types}{character. Either \code{"uncorrected"} or \code{"corrected"}, or
+a vector containing both.}
+
+\item{weights}{numeric vector of edge weights. Optional.}
+
+\item{mode}{character, either \code{"directed"} or \code{"undirected"},
+specifying whether the network should be interepeted as directed
+or undirected. Defaults to \code{"undirected"}.}
 }
 \value{
 Local clustering coefficient.
 }
 \description{
-Computes the average shortest path length using \code{igraph}'s
-\link[igraph]{average.path.length} function.
+Computes the average shortest path length (aspl) using \code{igraph}'s automatic
+method.
 }
 \details{
-Per default the corrected average shortest path length is computed
-as the average shortest path divided by
-\code{log(n vertices)/log(average degree)}, i.e., the expected
+Per default the uncorrected apsl is computed. Otherwise, the uncorrected aspl
+is normalized by \code{log(n nodes)/log(average degree)}, i.e., the expected
 average shortest path length for an Erdös-Renyi random graph.
 }

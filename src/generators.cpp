@@ -3,16 +3,20 @@
 using namespace Rcpp;
 
 
-// STEYVERS & TENENBAUM
+////////////////////////////////////////////////////////////////////////////////
+//
+//    STEYVERS & TENENBAUM
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // [[Rcpp::export]]
 NumericMatrix seed(int n, int m){
   int i,j;
   NumericMatrix adj(n,n);
-  for(i = 0; i < m; i++){
-    for(j = 0; j < m; j++){
+  for(i = 0; i < (m - 1); i++){
+    for(j = (i + 1); j < m; j++){
       if(j != i){
-        adj(i,j) = 1;
+        adj(i,j) = adj(j,i) = 1;
         }
       }
     }
@@ -90,10 +94,43 @@ int selectnode(std::vector<int> ps){
   }
 
 // [[Rcpp::export]]
-NumericMatrix stgame(int n, int m){
+int selectnode_power(std::vector<int> ps, double power){
+  int j, sum = 0, i = 0, n = ps.size();
+  double v, r = double(std::rand()) / RAND_MAX;
+  for(j = 0; j < n; j++){
+    ps[j] = std::pow(ps[j], power);
+    sum += ps[j];
+  }
+  v = ps[0] / double(sum);
+  if(sum != 0){
+    while(i < n && v <= r){
+      i++;
+      v += double(ps[i]) / double(sum);
+    }
+  } else {
+    i = randint(n);
+  }
+  return i;
+}
+
+
+//' Steyvers and Tenenbaum (2004) network growth model
+//'
+//' Grow networks using Steyvers and Tenenbaum (2004) model, which combines
+//' preferential attachment with a triad formation.
+//'
+//' @param n Integer. Number of nodes in the network.
+//' @param m Integer. Number of edges added for each incoming node.
+//'
+//' @return n x n adjacency matrix.
+//'
+//' @export
+//'
+// [[Rcpp::export]]
+NumericMatrix grow_st(int n = 100, int m = 5){
   if(n < m + 1) return 0;
   int i,j, node, connect;
-  NumericMatrix adj = seed(n,m + 1);
+  NumericMatrix adj = seed(n, m + 1);
   std::vector<int> degrees(m+1,m);
   std::vector<int> neighbors;
   for(i = m + 1; i < n; i++){
@@ -112,7 +149,11 @@ NumericMatrix stgame(int n, int m){
   }
 
 
-// // HOLME & KIM (1999) SCALE FREE WITH TUNABLE CLUSTERING
+////////////////////////////////////////////////////////////////////////////////
+//
+//    HOLME & KIM (1999) SCALE FREE WITH TUNABLE CLUSTERING
+//
+////////////////////////////////////////////////////////////////////////////////
 
 
 // [[Rcpp::export]]
@@ -146,14 +187,29 @@ void test(int n = 100, int m = 5){
   for(int i = 0; i < n; ++i) std::cout << selectnode(degrees) << '\n';
   }
 
+//' Holme and Kim (2002) network growth model
+//'
+//' Grow networks using Holme & Kim's (2002) model, which combines preferential
+//' attachment with tunable triad formation flexibly controlling the amount of
+//' clustering in the network via \code{p}.
+//'
+//' @param n Integer. Number of nodes in the network.
+//' @param m Integer. Number of edges added for each incoming node.
+//' @param p Numeric. Proability that a triad formation step follows a preferential
+//' attachment step.
+//'
+//' @return n x n adjacency matrix.
+//'
+//' @export
+//'
 // [[Rcpp::export]]
-NumericMatrix hkgame(int n, int m, double p){
+NumericMatrix grow_hk(int n = 100, int m = 5, double p = 5){
   int i, f, node;
   NumericMatrix adj = seed(n,m);
   std::vector<int> neighbors, degrees(m,0.0);
   for(i = 0; i < m; i++) degrees[i] = m - 1;
   for(f = m; f < n; f++){
-    int im = 0, t = 0;
+    int im = 0;
     while(im < m){
       std::vector<int> degrees_cur(degrees);
       node      = selectnode(degrees_cur);
@@ -187,69 +243,209 @@ NumericMatrix hkgame(int n, int m, double p){
   return adj;
   }
 
-
-
-
-// // [[Rcpp::export]]
-// NumericMatrix hkgame(int n, int m, double p, int pw = 1){
-//   int i, f, j, pos, to, ncon, uncneighbor;
-//   NumericMatrix adj = emptyseed(n);
-//   std::vector<int> neighbors, connect, activen, degrees(n,0);
-//   // for(i = 0; i < m; i++) degrees[i] = m - 1;
-//   // for(i = 0; i < m; i++) degrees[i] = 0;
-//   for(f = m; f < n; f++){
-//     activen      = degrees;
-//     connect      = getneighbors(adj,f,f);
-//     ncon         = connect.size();
-//     for(i = 0; i < ncon; i++){
-//       pos = connect[i];
-//       activen[pos] = 0;
-//       }
-//     to          = selectnode(activen);
-//     adj(f, to)  = adj(to, f) = 1;
-//     degrees[to] ++;
-//     activen[to] = 0;
-//     for(j = 1; j < m; j++){
-//       if(p > puni()){
-//         uncneighbor = unconnectedneighbor(adj, f, to);
-//         if(uncneighbor >= 0){
-//           adj(uncneighbor, f) = adj(uncneighbor, f) = 1;
-//           degrees[uncneighbor] ++;
-//           activen[uncneighbor] = 0;
-//           } else {
-//           j -= 1;
-//           }
-//         } else {
-//         to            = selectnode(activen);
-//         adj(f, to)    = adj(to, f) = 1;
-//         degrees[to]   ++;
-//         activen[to]   = 0;
-//         }
-//       }
-//     }
-//   return adj;
-//   }
-
-
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////
 //
+//    BARABÁSI & ALBERT
 //
+////////////////////////////////////////////////////////////////////////////////
+
+
+//' Barabási & Albert (2002) network growth model
+//'
+//' Grow networks using Barabási & Alberts's (2002) preferential
+//' attachment model.
+//'
+//' @param n Integer. Number of nodes in the network.
+//' @param m Integer. Number of edges added for each incoming node.
+//' @param power Numeric. Controls the selection of nodes by raising the degree
+//' to this power.
+//'
+//' @return n x n adjacency matrix.
+//'
+//' @export
+//'
+// [[Rcpp::export]]
+NumericMatrix grow_ba(int n = 100, int m = 5, double power = 1){
+  int i, f, node;
+  NumericMatrix adj = seed(n,m);
+  std::vector<int> neighbors, degrees(m,0.0);
+  for(i = 0; i < m; i++) degrees[i] = m - 1;
+  for(f = m; f < n; f++){
+    int im = 0;
+    while(im < m){
+      std::vector<int> degrees_cur(degrees);
+      if(power == 1){
+        node = selectnode(degrees_cur);
+        } else {
+        node = selectnode_power(degrees_cur, power);
+        }
+      //std::cout << f << '\t' << node << '\t' << adj(f, node) << '\n';
+      if(adj(node, f) != 1){
+        im++;
+        adj(f, node)  = adj(node, f) = 1;
+        degrees[node]++;
+        degrees_cur[node] = 0;
+      }
+    }
+    degrees.push_back(m);
+  }
+  return adj;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 //
+//    Watts & Strogatz
 //
-// //std::chrono::high_resolution_clock::time_point t_start, t_end;
-// //t_start = std::chrono::high_resolution_clock::now();
+////////////////////////////////////////////////////////////////////////////////
+
+// container
+struct container{
+  int first, second, third;
+};
+
+// comparer
+struct comparer{
+  inline bool operator()(const container& one, const container& two){
+    if(one.first == two.first){
+      if(one.second == two.second){
+        return one.third < two.third;
+      }
+      return one.second < two.second;
+    }
+    return one.first < two.first;
+  }
+};
+
+
+void sort_3(IntegerMatrix& mat, IntegerVector by){
+
+  // vectors to struct
+  std::vector<container> vec(mat.nrow());
+  for(int i = 0; i < vec.size(); ++i){
+    vec[i].first = mat(i, by[0]);
+    vec[i].second = mat(i, by[1]);
+    vec[i].third = mat(i, by[2]);
+  }
+
+  // sort
+  sort(vec.begin(),vec.end(),comparer());
+
+  // back to matrix
+  for(int i = 0; i < vec.size(); ++i){
+    mat(i, by[0]) = vec[i].first;
+    mat(i, by[1]) = vec[i].second;
+    mat(i, by[2]) = vec[i].third;
+  }
+
+}
+
+//' Watts & Strogatz (2002) network growth model
+//'
+//' Grow networks using Watts & Strogatz (1999) growth model, which constructs
+//' in-between regular lattices and random networks by re-wiring edges of a
+//' regular lattice with probability \code{p}.
+//'
+//' @param n Integer. Number of nodes in the network.
+//' @param m Integer. Number of edges added for each incoming node.
+//' @param p Numeric. Proability that an edge e_ij is rewired to e_ik with k being
+//' randomly drawn from the set of nodes.
+//'
+//' @return n x n adjacency matrix.
+//'
+//' @export
+//'
+// [[Rcpp::export]]
+IntegerMatrix grow_ws(int n = 100, int k = 10, double p = .2){
+
+  // extract edges
+  int ind = 0, max_dist = k / 2;
+  int n_edges = n * max_dist;
+  IntegerMatrix edg(n_edges, 3);
+  for(int i = 0; i < n - 1; ++i){
+    for(int j = i + 1; j < n; ++j){
+      int dist = std::min(std::abs(j - i),std::abs((j - n) - i));
+      if(dist < max_dist + 1){
+        edg(ind, 0) = i;
+        edg(ind, 1) = j;
+        edg(ind, 2) = dist;
+        ind++;
+      }
+    }
+  }
+
+  // sort
+  sort_3(edg, IntegerVector::create(2, 0, 1));
+
+  // fill matrix
+  IntegerMatrix adj(n, n);
+  for(int i = 0; i < n_edges; ++i){
+    adj(edg(i,0),edg(i,1)) = adj(edg(i,1), edg(i,0)) = 1;
+  }
+
+  // rewire
+  for(int i = 0; i < n_edges; ++i){
+    double p_cur = double(std::rand())/RAND_MAX;
+    if(p > p_cur){
+      int new_j = rand() % n;
+      if(new_j != edg(i, 0) && adj(edg(i, 0), new_j) == 0){
+        adj(edg(i,0), edg(i,1)) = 0;
+        adj(edg(i,1), edg(i,0)) = 0;
+        adj(edg(i,0), new_j) = 1;
+        adj(new_j, edg(i,0)) = 1;
+      }
+    }
+  }
+
+  return adj;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //
-// //t_end = std::chrono::high_resolution_clock::now();
-// //std::cout << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " ms\n";
+//    Regular lattice
 //
-// //
-// // if(p > .9 && p < 1){
-// //   std::cout << "Warning: code may run forever\n";
-// // }
-// // if(p == 1){
-// //   std::cout << "Can not work. Reduce p!\n";
-// //   return 0;
-// // }
+////////////////////////////////////////////////////////////////////////////////
+
+//' Regular lattice network model
+//'
+//' Grow regular lattice networks, in which every node is connected to m neighbors.
+//'
+//' @param n Integer. Number of nodes in the network.
+//' @param m Integer. Number of edges added for each incoming node.
+//'
+//' @return n x n adjacency matrix.
+//'
+//' @export
+//'
+// [[Rcpp::export]]
+IntegerMatrix grow_lattice(int n = 100, int k = 10){
+
+  // extract edges
+  int ind = 0, max_dist = k / 2;
+  int n_edges = n * max_dist;
+  IntegerMatrix edg(n_edges, 3);
+  for(int i = 0; i < n - 1; ++i){
+    for(int j = i + 1; j < n; ++j){
+      int dist = std::min(std::abs(j - i),std::abs((j - n) - i));
+      if(dist < max_dist + 1){
+        edg(ind, 0) = i;
+        edg(ind, 1) = j;
+        edg(ind, 2) = dist;
+        ind++;
+      }
+    }
+  }
+
+  // fill matrix
+  IntegerMatrix adj(n, n);
+  for(int i = 0; i < n_edges; ++i){
+    adj(edg(i,0),edg(i,1)) = adj(edg(i,1), edg(i,0)) = 1;
+  }
+
+
+  return adj;
+}
+
+

@@ -4,18 +4,25 @@
 \alias{k_dist}
 \title{Maximum difference between cumulative degree distribution}
 \usage{
-k_dist(g1, g2)
+k_dist(adj_1, adj_2, weights_1 = NULL, weights_2 = NULL,
+  mode_1 = "undirected", mode_2 = "undirected")
 }
 \arguments{
-\item{g1}{a graph object of class \code{igraph}.}
+\item{adj_1}{numeric matrix representing the adjacency matrix of graph 1.}
 
-\item{g2}{a graph object of class \code{igraph}.}
+\item{adj_2}{numeric matrix representing the adjacency matrix of graph 2.}
+
+\item{weights_1, weights_2}{numeric vector of edge weights for network 1 and
+2, respectively. Optional.}
+
+\item{mode_1, mode_2}{character, either \code{"directed"} or \code{"undirected"},
+specifying whether network 1 and 2 should be interepeted as directed
+or undirected, respectively. Defaults to \code{"undirected"}.}
 }
 \value{
-Distance between cumulative degree distributions in terms
-of the difference of cumulative proportions.
+Distance between cumulative degree distributions.
 }
 \description{
 Determines the maximum difference between the cumulative
-degree distributions of two graphs.
+degree distributions of two graphs
 }
