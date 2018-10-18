@@ -564,8 +564,8 @@ one_search <- function(adj_list, start, observe, nmax = 1000L, pjump = 0, type =
 #' from the start node.
 #'
 #' @export
-search <- function(adjlist, start, observe, nmax = 1000L, pjump = 0, type = 0L) {
-    .Call('_memnet_search', PACKAGE = 'memnet', adjlist, start, observe, nmax, pjump, type)
+search_rw <- function(adjlist, start, observe, nmax = 1000L, pjump = 0, type = 0L) {
+    .Call('_memnet_search_rw', PACKAGE = 'memnet', adjlist, start, observe, nmax, pjump, type)
 }
 
 #' Search network repeatedly using switcher-random walk process
@@ -589,7 +589,7 @@ search <- function(adjlist, start, observe, nmax = 1000L, pjump = 0, type = 0L) 
 #' the (minimum) number of steps it took to reach the end node from the start node.
 #'
 #' @export
-search_mean <- function(adjlist, start, observe, nmax = 1000L, pjump = 0, type = 0L, nrep = 100L) {
-    .Call('_memnet_search_mean', PACKAGE = 'memnet', adjlist, start, observe, nmax, pjump, type, nrep)
+search_rw_mean <- function(adjlist, start, observe, nmax = 1000L, pjump = 0, type = 0L, nrep = 100L) {
+    .Call('_memnet_search_rw_mean', PACKAGE = 'memnet', adjlist, start, observe, nmax, pjump, type, nrep)
 }
 

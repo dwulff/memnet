@@ -735,9 +735,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// search
-NumericMatrix search(GenericVector adjlist, std::vector<int> start, std::vector<int> observe, int nmax, double pjump, int type);
-RcppExport SEXP _memnet_search(SEXP adjlistSEXP, SEXP startSEXP, SEXP observeSEXP, SEXP nmaxSEXP, SEXP pjumpSEXP, SEXP typeSEXP) {
+// search_rw
+NumericMatrix search_rw(GenericVector adjlist, std::vector<int> start, std::vector<int> observe, int nmax, double pjump, int type);
+RcppExport SEXP _memnet_search_rw(SEXP adjlistSEXP, SEXP startSEXP, SEXP observeSEXP, SEXP nmaxSEXP, SEXP pjumpSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -747,13 +747,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type nmax(nmaxSEXP);
     Rcpp::traits::input_parameter< double >::type pjump(pjumpSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(search(adjlist, start, observe, nmax, pjump, type));
+    rcpp_result_gen = Rcpp::wrap(search_rw(adjlist, start, observe, nmax, pjump, type));
     return rcpp_result_gen;
 END_RCPP
 }
-// search_mean
-NumericMatrix search_mean(GenericVector adjlist, std::vector<int> start, std::vector<int> observe, int nmax, double pjump, int type, int nrep);
-RcppExport SEXP _memnet_search_mean(SEXP adjlistSEXP, SEXP startSEXP, SEXP observeSEXP, SEXP nmaxSEXP, SEXP pjumpSEXP, SEXP typeSEXP, SEXP nrepSEXP) {
+// search_rw_mean
+NumericMatrix search_rw_mean(GenericVector adjlist, std::vector<int> start, std::vector<int> observe, int nmax, double pjump, int type, int nrep);
+RcppExport SEXP _memnet_search_rw_mean(SEXP adjlistSEXP, SEXP startSEXP, SEXP observeSEXP, SEXP nmaxSEXP, SEXP pjumpSEXP, SEXP typeSEXP, SEXP nrepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -764,7 +764,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type pjump(pjumpSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
     Rcpp::traits::input_parameter< int >::type nrep(nrepSEXP);
-    rcpp_result_gen = Rcpp::wrap(search_mean(adjlist, start, observe, nmax, pjump, type, nrep));
+    rcpp_result_gen = Rcpp::wrap(search_rw_mean(adjlist, start, observe, nmax, pjump, type, nrep));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -830,8 +830,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_one_fluency_steps", (DL_FUNC) &_memnet_one_fluency_steps, 4},
     {"_memnet_fluency_steps", (DL_FUNC) &_memnet_fluency_steps, 4},
     {"_memnet_one_search", (DL_FUNC) &_memnet_one_search, 6},
-    {"_memnet_search", (DL_FUNC) &_memnet_search, 6},
-    {"_memnet_search_mean", (DL_FUNC) &_memnet_search_mean, 7},
+    {"_memnet_search_rw", (DL_FUNC) &_memnet_search_rw, 6},
+    {"_memnet_search_rw_mean", (DL_FUNC) &_memnet_search_rw_mean, 7},
     {NULL, NULL, 0}
 };
 

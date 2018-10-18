@@ -660,12 +660,12 @@ NumericMatrix one_search(GenericVector adj_list,
 //'
 //' @export
 // [[Rcpp::export]]
-NumericMatrix search(GenericVector adjlist,
-                     std::vector<int> start,
-                     std::vector<int> observe,
-                     int nmax = 1000,
-                     double pjump = 0,
-                     int type = 0){
+NumericMatrix search_rw(GenericVector adjlist,
+                        std::vector<int> start,
+                        std::vector<int> observe,
+                        int nmax = 1000,
+                        double pjump = 0,
+                        int type = 0){
 
   // scalars
   int i, j, ind = 0, n_start = start.size(), n_observe = observe.size();
@@ -711,20 +711,20 @@ NumericMatrix search(GenericVector adjlist,
 //' @export
 // [[Rcpp::export]]
 
-NumericMatrix search_mean(GenericVector adjlist,
-                          std::vector<int> start,
-                          std::vector<int> observe,
-                          int nmax = 1000,
-                          double pjump = 0,
-                          int type = 0,
-                          int nrep = 100){
+NumericMatrix search_rw_mean(GenericVector adjlist,
+                             std::vector<int> start,
+                             std::vector<int> observe,
+                             int nmax = 1000,
+                             double pjump = 0,
+                             int type = 0,
+                             int nrep = 100){
 
   // first time
-  NumericMatrix res = search(adjlist, start, observe, nmax, pjump, type);
+  NumericMatrix res = search_rw(adjlist, start, observe, nmax, pjump, type);
 
   // iterate
   for(int i = 0; i < nrep; i++){
-    NumericMatrix res_i = search(adjlist, start, observe, nmax, pjump, type);
+    NumericMatrix res_i = search_rw(adjlist, start, observe, nmax, pjump, type);
     res(_,2) = res(_,2) + res_i(_,2);
     }
 
