@@ -1,12 +1,17 @@
 Package: memnet
 Type: Package
-Title: Network tools for semantic memory
+Title: memnet: Network tools for memory research
+Description: The memnet package provides efficient implementations of network science tools 
+	to facilitate research into human (semantic) memory. In its current version, the package 
+	contains several methods to infer networks from verbal fluency data, various network 
+	growth models, diverse (switcher-) random walk processes, and tools to analyze and 
+	visualize networks. To deliver maximum performance the majority of memnet is written
+	in C++.
 Version: 0.1.0
-Author: Who wrote it
 Maintainer: Dirk U. Wulff <dirk.wulff@gmail.com>
-Description: The package implements common models of binary risky choice and
-    helper functions in c++ for fast simulations and fitting.
-License: GPL (>= 2)
+Authors@R:  person(c("Dirk","U."), "Wulff", role = c("aut","cre"),
+    		email = "dirk.wulff@gmail.com")
+License: GPL-3
 Encoding: UTF-8
 Depends: 
     R (>= 3.1.0),
