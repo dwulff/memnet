@@ -7,8 +7,8 @@
 fluency(adjlist, n, pjump = 0, type = 0L, string = FALSE)
 }
 \arguments{
-\item{adjlist}{a list containing row indices for adjacent nodes as created
-by \link{get_adjlist}.}
+\item{adjlist}{a list containing row indices of nodes adjacent node to the ith
+node as created by \link{get_adjlist}.}
 
 \item{n}{integer vector specifying for each sequence the number of
 unique productions.}

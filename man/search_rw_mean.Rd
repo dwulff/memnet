@@ -8,8 +8,8 @@ search_rw_mean(adjlist, start, observe, nmax = 1000L, pjump = 0,
   type = 0L, nrep = 100L)
 }
 \arguments{
-\item{adjlist}{a list containing row indices for adjacent nodes as created
-by \link{get_adjlist}.}
+\item{adjlist}{a list containing row indices of nodes adjacent node to the ith
+node as created by \link{get_adjlist}.}
 
 \item{start}{index of the start vertix.}
 

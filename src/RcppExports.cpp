@@ -632,6 +632,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// add_1
+void add_1(std::vector<int>& items);
+RcppExport SEXP _memnet_add_1(SEXP itemsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<int>& >::type items(itemsSEXP);
+    add_1(items);
+    return R_NilValue;
+END_RCPP
+}
 // one_fluency
 std::vector<int> one_fluency(GenericVector adj_list, int n, double pjump, int type);
 RcppExport SEXP _memnet_one_fluency(SEXP adj_listSEXP, SEXP nSEXP, SEXP pjumpSEXP, SEXP typeSEXP) {
@@ -822,6 +832,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_getnext", (DL_FUNC) &_memnet_getnext, 1},
     {"_memnet_unicut", (DL_FUNC) &_memnet_unicut, 2},
     {"_memnet_adjlist_minus1", (DL_FUNC) &_memnet_adjlist_minus1, 1},
+    {"_memnet_add_1", (DL_FUNC) &_memnet_add_1, 1},
     {"_memnet_one_fluency", (DL_FUNC) &_memnet_one_fluency, 4},
     {"_memnet_fluency", (DL_FUNC) &_memnet_fluency, 5},
     {"_memnet_one_ffluency", (DL_FUNC) &_memnet_one_ffluency, 4},

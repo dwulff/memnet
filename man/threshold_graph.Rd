@@ -4,7 +4,7 @@
 \alias{threshold_graph}
 \title{Create threshold graph}
 \usage{
-threshold_graph(dat, min_cooc = 1L)
+threshold_graph(dat, min_cooc = 2L)
 }
 \arguments{
 \item{dat}{list of character vectors containing the fluency productions.}

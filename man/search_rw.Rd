@@ -8,8 +8,8 @@ search_rw(adjlist, start, observe, nmax = 1000L, pjump = 0,
   type = 0L)
 }
 \arguments{
-\item{adjlist}{a list containing row indices for adjacent nodes as created
-by \link{get_adjlist}.}
+\item{adjlist}{a list containing row indices of nodes adjacent node to the ith
+node as created by \link{get_adjlist}.}
 
 \item{start}{integer vector of length 1 or larger specifying the index of
 the start node.}

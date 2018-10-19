@@ -189,7 +189,7 @@ set_saturation = function(col, saturation = .5){
   if(any(saturation > 1)) stop('Saturation must be within 0 and 1.')
 
   # adjust length
-  if(length(col) != length(saturation)){
+  if(ncol(col) != length(saturation)){
     if(ncol(col) > length(saturation)) {
       saturation = rep(saturation, length(col) / length(saturation))
       }
@@ -264,12 +264,12 @@ network_plot = function(adj,
                         names = NULL,
                         layout = igraph::layout.fruchterman.reingold,
                         nod_col = "#E0EED4",
-                        nod_cex = 5,
+                        nod_cex = 3,
                         nod_shadow = T,
                         edg_col = 'grey25',
-                        edg_lwd = 2,
+                        edg_lwd = 1.5,
                         lab_col = 'black',
-                        lab_cex = 1.5,
+                        lab_cex = 1,
                         lab_lwd = 1,
                         lab_lcol = 'grey25',
                         lab_grid_size = 48,

@@ -105,7 +105,7 @@ pbinom <- function(k, n, p) {
 #' A matrix
 #'
 #' @export
-community_graph <- function(dat, l = 3L, min_cooc = 1L, crit = .05) {
+community_graph <- function(dat, l = 3L, min_cooc = 2L, crit = .05) {
     .Call('_memnet_community_graph', PACKAGE = 'memnet', dat, l, min_cooc, crit)
 }
 
@@ -119,6 +119,7 @@ community_graph <- function(dat, l = 3L, min_cooc = 1L, crit = .05) {
 #' @return
 #' A matrix
 #'
+#' @export
 rw_graph <- function(dat) {
     .Call('_memnet_rw_graph', PACKAGE = 'memnet', dat)
 }
@@ -137,7 +138,7 @@ rw_graph <- function(dat) {
 #' A matrix
 #'
 #' @export
-threshold_graph <- function(dat, min_cooc = 1L) {
+threshold_graph <- function(dat, min_cooc = 2L) {
     .Call('_memnet_threshold_graph', PACKAGE = 'memnet', dat, min_cooc)
 }
 
@@ -365,6 +366,10 @@ adjlist_minus1 <- function(adjlist) {
     .Call('_memnet_adjlist_minus1', PACKAGE = 'memnet', adjlist)
 }
 
+add_1 <- function(items) {
+    invisible(.Call('_memnet_add_1', PACKAGE = 'memnet', items))
+}
+
 #' Verbal fluency generator
 #'
 #' Generates verbal fluency data using a switcher-random walk process.
@@ -376,8 +381,8 @@ adjlist_minus1 <- function(adjlist) {
 #' the network and where it jumps to is further controlled
 #' by \code{type}. Neighbors are always selected uniformly.
 #'
-#' @param adjlist a list containing row indices for adjacent nodes as created
-#'   by \link{get_adjlist}.
+#' @param adjlist a list containing row indices of nodes adjacent node to the ith
+#'   node as created by \link{get_adjlist}.
 #' @param n integer specifying the number of unique productions.
 #' @param pjump numeric specifying the probability of a jump.
 #' @param type integer controlling network start and jump nodes.

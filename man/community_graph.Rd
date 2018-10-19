@@ -4,7 +4,7 @@
 \alias{community_graph}
 \title{Create community graph}
 \usage{
-community_graph(dat, l = 3L, min_cooc = 1L, crit = 0.05)
+community_graph(dat, l = 3L, min_cooc = 2L, crit = 0.05)
 }
 \arguments{
 \item{dat}{list of character vectors containing the fluency productions.}

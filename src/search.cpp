@@ -71,7 +71,11 @@ GenericVector adjlist_minus1(GenericVector &adjlist){
   return new_adjlist;
   }
 
-
+// [[Rcpp::export]]
+void add_1(std::vector<int> &items){
+  int n = items.size();
+  for(int i  = 0; i < n; ++i) items[i]++;
+  }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,8 +95,8 @@ GenericVector adjlist_minus1(GenericVector &adjlist){
 //' the network and where it jumps to is further controlled
 //' by \code{type}. Neighbors are always selected uniformly.
 //'
-//' @param adjlist a list containing row indices for adjacent nodes as created
-//'   by \link{get_adjlist}.
+//' @param adjlist a list containing row indices of nodes adjacent node to the ith
+//'   node as created by \link{get_adjlist}.
 //' @param n integer specifying the number of unique productions.
 //' @param pjump numeric specifying the probability of a jump.
 //' @param type integer controlling network start and jump nodes.
@@ -176,6 +180,11 @@ std::vector<int> one_fluency(GenericVector adj_list,
       j = j - 1;
       }
     }
+
+  //add one
+  add_1(items);
+
+  //out
   return items;
   }
 
@@ -286,7 +295,15 @@ std::vector<int> one_ffluency(GenericVector adj_list,
       items.push_back(npos);
       }
     }
-  return unicut(items,n);
+
+  // reduce to unique
+  items = unicut(items,n);
+
+  // add 1
+  add_1(items);
+
+  // out
+  return items;
   }
 
 

@@ -18,8 +18,8 @@ selects a random node to serve both as the start node and the jump node.
 For \code{type = 2} the process selects the start and any jump nodes
 uniformly at random.}
 
-\item{adjlist}{a list containing row indices for adjacent nodes as created
-by \link{get_adjlist}.}
+\item{adjlist}{a list containing row indices of nodes adjacent node to the ith
+node as created by \link{get_adjlist}.}
 }
 \value{
 Integer vector containing the indices of the fluency productions.

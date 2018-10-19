@@ -16,4 +16,6 @@
 #
 # names(anis) = sapply(ages, function(x) x[1])
 #
-# devtools::use_data(anis)
+# animal_fluency = anis
+#
+# devtools::use_data(animal_fluency, overwrite = T)

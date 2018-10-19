@@ -375,7 +375,7 @@ double pbinom(int k, int n, double p){
 CharacterMatrix community_graph(
   GenericVector dat,
   int l        = 3,
-  int min_cooc = 1,
+  int min_cooc = 2,
   double crit  = .05
   ){
   //std::chrono::high_resolution_clock::time_point t_start, t_end;
@@ -428,7 +428,7 @@ CharacterMatrix community_graph(
     cnt = cntpairsinwin[i];
     p   = plinked[i];
     //higher count than min?
-    if(cnt > min_cooc){
+    if(cnt >= min_cooc){
       if(cnt > ndat){
         cnt = ndat;
         }
@@ -478,6 +478,7 @@ CharacterMatrix community_graph(
 //' @return
 //' A matrix
 //'
+//' @export
 // [[Rcpp::export]]
 CharacterMatrix rw_graph(
     GenericVector dat
@@ -528,61 +529,8 @@ CharacterMatrix rw_graph(
 // [[Rcpp::export]]
 CharacterMatrix threshold_graph(
     GenericVector dat,
-    int min_cooc = 1
+    int min_cooc = 2
   ){
-  //std::chrono::high_resolution_clock::time_point t_start, t_end;
-  int i, npairs, cnt, igr = 0;
-  NumericVector freqs;
-  std::vector<std::string> starts;
-  std::vector<std::string> ends;
 
-  //t_start = std::chrono::high_resolution_clock::now();
-
-  //number of tests
-  std::vector<std::string> unis = mset(dat);   //in alphabetic order
-  //int nuni = unis.size();
-
-  //determine frequency of pairs
-  GenericVector inwin = lags(dat, 1);
-  std::vector<std::string> pairsinwin = inwin[0];
-
-  // count pairs
-  std::vector<std::string> unipairsinwin = set(pairsinwin);
-  std::vector<int>         cntpairsinwin = count(pairsinwin);
-
-  //determine probabilities
-  CharacterMatrix pairs = getpairs(unipairsinwin, "@");
-  npairs    = pairsinwin.size();
-
-  //loop over pairs
-  for(i = 0; i < npairs; i++){
-    cnt = cntpairsinwin[i];
-
-    //higher count than min?
-    if(cnt > min_cooc){
-      starts.push_back(std::string(pairs(i,0)));
-      ends.push_back(std::string(pairs(i,1)));
-      igr ++;
-    }
-  }
-
-  // identify NA
-  int n_edg = starts.size();
-  std::vector<int> indices;
-  for(int i = 0; i < n_edg; ++i){
-    if(starts[i] != "NA" & ends[i] != "NA") indices.push_back(i);
-  }
-  igr = indices.size();
-
-  //fill graph
-  CharacterMatrix graph(igr, 2);
-  for(i = 0; i < igr; i++){
-    graph(i,0) = starts[indices[i]];
-    graph(i,1)  = ends[indices[i]];
-  }
-
-  //t_end = std::chrono::high_resolution_clock::now();
-  //std::cout << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " ms\n";
-
-  return graph;
+  return community_graph(dat, 1, min_cooc, 1);
 }

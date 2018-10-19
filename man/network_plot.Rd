@@ -6,9 +6,9 @@
 \usage{
 network_plot(adj, names = NULL,
   layout = igraph::layout.fruchterman.reingold, nod_col = "#E0EED4",
-  nod_cex = 5, nod_shadow = T, edg_col = "grey25", edg_lwd = 2,
-  lab_col = "black", lab_cex = 1.5, lab_lwd = 1,
-  lab_lcol = "grey25", lab_grid_size = 48, lab_padding = c(3, 3))
+  nod_cex = 3, nod_shadow = T, edg_col = "grey25", edg_lwd = 1.5,
+  lab_col = "black", lab_cex = 1, lab_lwd = 1, lab_lcol = "grey25",
+  lab_grid_size = 48, lab_padding = c(3, 3))
 }
 \arguments{
 \item{adj}{numeric matrix representing the adjacency matrix. Can also be an
