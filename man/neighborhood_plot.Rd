@@ -13,7 +13,11 @@ object of class \code{"igraph"} or an edge list, i.e., a two-column
 \code{matrix} or \code{data.frame} containing specifying the edges start
 and end points.}
 
-\item{node}{optional character vector specifiying the node names.}
+\item{names}{optional character vector specifiying the node names.}
+
+\item{node}{integer specifying the row index (within the adjacency
+matrix) of the node whose the neighborhood should be plotted.
+Alternatively the node name.}
 
 \item{k}{integer specifying the size of the neighborhood. Specifically,
 the plot will contain all nodes that are \code{k} or fewer steps away
@@ -21,14 +25,10 @@ from \code{v}.}
 
 \item{nod_col}{character vector of length 1 specifying the node colors.}
 
-\item{\dots}{arguments to be passed to \link{graph_plot}.}
-
-\item{node}{integer specifying the row index (within the adjacency
-matrix) of the node whose the neighborhood should be plotted.
-Alternatively the node name.}
-
-\item{nod_shaing}{logical specifying whether the node colors should be shaded
+\item{nod_shading}{logical specifying whether the node colors should be shaded
 as a function of the distance to \code{node}.}
+
+\item{\dots}{arguments to be passed to \link{network_plot}.}
 }
 \value{
 nothing. A plot is created in \link{dev.cur}.

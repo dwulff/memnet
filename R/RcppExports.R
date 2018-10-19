@@ -194,10 +194,6 @@ unconnectedneighbor <- function(adj, from, to) {
     .Call('_memnet_unconnectedneighbor', PACKAGE = 'memnet', adj, from, to)
 }
 
-test <- function(n = 100L, m = 5L) {
-    invisible(.Call('_memnet_test', PACKAGE = 'memnet', n, m))
-}
-
 #' Holme and Kim (2002) network growth model
 #'
 #' Grow networks using Holme & Kim's (2002) model, which combines preferential
@@ -242,9 +238,10 @@ grow_ba <- function(n = 100L, m = 5L, power = 1) {
 #' regular lattice with probability \code{p}.
 #'
 #' @param n Integer. Number of nodes in the network.
-#' @param m Integer. Number of edges added for each incoming node.
+#' @param k Integer. Number of edges added for each incoming node. Can only be
+#'   even.
 #' @param p Numeric. Proability that an edge e_ij is rewired to e_ik with k being
-#' randomly drawn from the set of nodes.
+#'   randomly drawn from the set of nodes.
 #'
 #' @return n x n adjacency matrix.
 #'
@@ -258,8 +255,7 @@ grow_ws <- function(n = 100L, k = 10L, p = .2) {
 #'
 #' Grow regular lattice networks, in which every node is connected to m neighbors.
 #'
-#' @param n Integer. Number of nodes in the network.
-#' @param m Integer. Number of edges added for each incoming node.
+#' @inheritParams grow_ws
 #'
 #' @return n x n adjacency matrix.
 #'
@@ -342,6 +338,14 @@ trm <- function(x, y) {
     .Call('_memnet_trm', PACKAGE = 'memnet', x, y)
 }
 
+get_names_c <- function(edg) {
+    .Call('_memnet_get_names_c', PACKAGE = 'memnet', edg)
+}
+
+get_names_i <- function(edg) {
+    .Call('_memnet_get_names_i', PACKAGE = 'memnet', edg)
+}
+
 noverk <- function(n, k) {
     .Call('_memnet_noverk', PACKAGE = 'memnet', n, k)
 }
@@ -381,7 +385,7 @@ add_1 <- function(items) {
 #' the network and where it jumps to is further controlled
 #' by \code{type}. Neighbors are always selected uniformly.
 #'
-#' @param adjlist a list containing row indices of nodes adjacent node to the ith
+#' @param adj_list a list containing row indices of nodes adjacent node to the ith
 #'   node as created by \link{get_adjlist}.
 #' @param n integer specifying the number of unique productions.
 #' @param pjump numeric specifying the probability of a jump.
@@ -408,6 +412,8 @@ one_fluency <- function(adj_list, n, pjump, type) {
 #' For details see \link{one_fluency}.
 #'
 #' @inheritParams one_fluency
+#' @param adjlist a list containing row indices of nodes adjacent node to the ith
+#'   node as created by \link{get_adjlist}.
 #' @param n integer vector specifying for each sequence the number of
 #'   unique productions.
 #' @param string logical specifying whether the output should be of mode character.
@@ -438,7 +444,7 @@ fluency <- function(adjlist, n, pjump = 0, type = 0L, string = FALSE) {
 #' that if repetitions occur \code{ffluency} will produce sequences of length
 #' \code{min(n * 3 - k, n)} where k is the number of repeptitions.
 #'
-#' @inheritParams fluency
+#' @inheritParams one_fluency
 #' @param n integer specifying the maximum number of productions. Function may
 #' return fewer than \code{n}.
 #'
@@ -458,6 +464,7 @@ one_ffluency <- function(adj_list, n, pjump, type) {
 #' For details see \link{one_ffluency}.
 #'
 #' @inheritParams one_ffluency
+#' @inheritParams fluency
 #' @param n integer vector specifying for each sequence the maximum numbers of
 #' productions. Function may return fewer than \code{n}.
 #' @param string logical specifying whether the output should be of mode character.
@@ -487,12 +494,8 @@ ffsearch <- function(adjlist, n, pjump = 0, type = 0L, string = FALSE) {
 #' required to produce a sequence of unique productions, rather than the
 #' productions itself.
 #'
-#' @inheritParams fluency
+#' @inheritParams one_fluency
 #' @param n integer specifying the number of productions.
-#' @param random bool controlling jump nodes.
-#'   For \code{random = TRUE} the process selects jump at random. For
-#'   \code{random = FALSE} the process always jumps back to the start node. The
-#'   start node is always selected at random.
 #'
 #'
 #' @return Integer vector containing the indices of the fluency productions.
@@ -512,6 +515,7 @@ one_fluency_steps <- function(adj_list, n, pjump, type) {
 #' For details see \link{one_fluency_steps}.
 #'
 #' @inheritParams one_fluency_steps
+#' @inheritParams fluency
 #' @param n integer vector specifying the numbers of production.
 #'
 #' @return List of character vectors containing the indices of the fluency productions.
@@ -531,7 +535,7 @@ fluency_steps <- function(adjlist, n, pjump = 0, type = 0L) {
 #' If a node specified in \code{observe} has never been visited then the function
 #' returns \code{nmax} for that node.
 #'
-#' @inheritParams fluency
+#' @inheritParams one_fluency
 #' @param start integer vector of length 1 specifying the index of
 #'   the start node.
 #' @param observe integer vector of length 1 or larger specifying the target
@@ -556,6 +560,7 @@ one_search <- function(adj_list, start, observe, nmax = 1000L, pjump = 0, type =
 #' If a node specified in \code{observe} has never been visited then the function
 #' returns \code{nmax} for that node.
 #'
+#' @inheritParams one_search
 #' @inheritParams fluency
 #' @param start integer vector of length 1 or larger specifying the index of
 #'   the start node.
@@ -586,9 +591,11 @@ search_rw <- function(adjlist, start, observe, nmax = 1000L, pjump = 0, type = 0
 #' returns \code{nmax} for that node.
 #'
 #' @inheritParams fluency
-#' @param start index of the start vertix.
+#' @inheritParams search_rw
 #' @param observe integer vector specifying the nodes whose first visits should be recorded.
 #' @param nmax integer specifying the maximum number of steps.
+#' @param nrep integer specifying the number of iterations across which
+#'   aggregates are computed.
 #'
 #' @return Numeric, 3 column matrix containing in each row the start node, the end node, and
 #' the (minimum) number of steps it took to reach the end node from the start node.

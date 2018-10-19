@@ -9,7 +9,7 @@ cmix(col_1, col_2, weight, format = "hex")
 \arguments{
 \item{col_1, col_2}{character vector of length one or of matching length containing
 colors either as a color name (see \link{colors}), rgb format (see \link{rgb}), or
-hex format (see \link{col2hex}).}
+hex format.}
 
 \item{weight}{numeric between 0 and 1 specifying the relative mixing weight for color
 one. E.g., \code{weight = .8} means that final color is composed of 80 percent

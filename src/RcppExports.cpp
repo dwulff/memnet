@@ -408,17 +408,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// test
-void test(int n, int m);
-RcppExport SEXP _memnet_test(SEXP nSEXP, SEXP mSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    test(n, m);
-    return R_NilValue;
-END_RCPP
-}
 // grow_hk
 NumericMatrix grow_hk(int n, int m, double p);
 RcppExport SEXP _memnet_grow_hk(SEXP nSEXP, SEXP mSEXP, SEXP pSEXP) {
@@ -560,6 +549,28 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::vector<double> >::type x(xSEXP);
     Rcpp::traits::input_parameter< std::vector<double> >::type y(ySEXP);
     rcpp_result_gen = Rcpp::wrap(trm(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_names_c
+std::vector<std::string> get_names_c(CharacterMatrix& edg);
+RcppExport SEXP _memnet_get_names_c(SEXP edgSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix& >::type edg(edgSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_names_c(edg));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_names_i
+std::vector<int> get_names_i(IntegerMatrix& edg);
+RcppExport SEXP _memnet_get_names_i(SEXP edgSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix& >::type edg(edgSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_names_i(edg));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -813,7 +824,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_emptyseed", (DL_FUNC) &_memnet_emptyseed, 1},
     {"_memnet_puni", (DL_FUNC) &_memnet_puni, 0},
     {"_memnet_unconnectedneighbor", (DL_FUNC) &_memnet_unconnectedneighbor, 3},
-    {"_memnet_test", (DL_FUNC) &_memnet_test, 2},
     {"_memnet_grow_hk", (DL_FUNC) &_memnet_grow_hk, 3},
     {"_memnet_grow_ba", (DL_FUNC) &_memnet_grow_ba, 3},
     {"_memnet_grow_ws", (DL_FUNC) &_memnet_grow_ws, 3},
@@ -826,6 +836,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_get_kneighbors", (DL_FUNC) &_memnet_get_kneighbors, 3},
     {"_memnet_prbs", (DL_FUNC) &_memnet_prbs, 2},
     {"_memnet_trm", (DL_FUNC) &_memnet_trm, 2},
+    {"_memnet_get_names_c", (DL_FUNC) &_memnet_get_names_c, 1},
+    {"_memnet_get_names_i", (DL_FUNC) &_memnet_get_names_i, 1},
     {"_memnet_noverk", (DL_FUNC) &_memnet_noverk, 2},
     {"_memnet_to_string", (DL_FUNC) &_memnet_to_string, 1},
     {"_memnet_getneighbors", (DL_FUNC) &_memnet_getneighbors, 2},

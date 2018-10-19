@@ -12,6 +12,9 @@ common_subgraph_stats(adj_1, adj_2, giant = FALSE, weights_1 = NULL,
 
 \item{adj_2}{numeric matrix representing the adjacency matrix of graph 2.}
 
+\item{giant}{logical specifying whether the should be computed for the
+largest component.}
+
 \item{weights_1}{numeric vector of edge weights for network 1 and
 2, respectively. Optional.}
 

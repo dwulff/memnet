@@ -19,11 +19,15 @@ library(memnet)
 
 ```
 
-The `memnet` package was build to facilitate research into (semantic) memory using tools from network science. In its current version, the package contains several methods to **infer networks from verbal fluency data**, various **network growth** mechanisms, diverse **(switcher-)random walk processes**, and tools to analyze and visualize networks.
+The `memnet` package provides efficient implementations of network science tools to facilitate research into human (semantic) memory. In its current version, the package contains several methods to **infer networks from verbal fluency data**, various **network growth models**, diverse **(switcher-) random walk processes**, and tools to analyze and visualize networks.
+
+The majority of `memnet` is written in C++ to deliver maximum performance.
+
+Have questions, found annoying errors, or have need/recommendation for additional functionality? Please don't hesitate to write me at `dirk.wulff@gmail.com` or `https://github.com/dwulff/memnet`. Thanks!
 
 ## Networks from verbal fluency data
 
-Verbal fluency is a commonly employed task in cognitive science and neuropsychological diagnostics that requires individuals to retrieve within a limited time window, e.g., 1 minute, as many elements from a natural category as they can. Typically, reseachers interpret the sequences that individuals produce in this task as reflecting the underlying semantic network structure. Several methods have been proposed to infer the network structure from verbal fluency including the three methods implement here: `community_graph`, `threshold_graph`, and `rw_graph`. Of these three, `community_graph` is the most complex. It adds edges for each pair of produced elements that occur within a window of `l` steps and then retains only those that occur more often than `min_cooc` and what is expected by chance giving a false positive rate of `crit`. `threshold_graph` and `rw_graph` are both nested within `community_graph`. The fromer retains `min_cooc` as a parameter but sets `l = 1` and `crit = 1`, implying that only adjacent nodes are considered and that chance expectations are not directly taken into account. The latter sets all parameters to 1 by including edges for every adjacent pair of nodes. The results are illustrated below.
+Verbal fluency is a commonly employed task in cognitive science and neuropsychological diagnostics that requires individuals to retrieve within a limited time window, e.g., 1 minute, as many elements from a natural category as they can. Typically, researchers interpret the sequences that individuals produce in this task as reflecting the underlying semantic network structure. Several methods have been proposed to infer the network structure from verbal fluency including the three methods implement here: `community_graph`, `threshold_graph`, and `rw_graph`. Of these three, `community_graph` is the most complex. It adds edges for each pair of produced elements that occur within a window of `l` steps and then retains only those that occur more often than `min_cooc` and what is expected by chance giving a false positive rate of `crit`. `threshold_graph` and `rw_graph` are both nested within `community_graph`. The former retains `min_cooc` as a parameter but sets `l = 1` and `crit = 1`, implying that only adjacent nodes are considered and that chance expectations are not directly taken into account. The latter sets all parameters to 1 by including edges for every adjacent pair of nodes. The results are illustrated below.
 
 ```{r, fig.width = 7, fig.height=5, warning = FALSE}
 library(memnet)
@@ -45,9 +49,67 @@ network_stats(edg_to_adj(net_rw))
 # plot
 network_plot(edg_to_adj(net_comunity), nod_cex = 2, lab_cex = 1)
 network_plot(edg_to_adj(net_threshold), nod_cex = 2, lab_cex = 1)
-network_plot(edg_to_adj(net_rw), nod_cex = 2, lab_cex = 1, lab_grid_size = 70)
+network_plot(edg_to_adj(net_rw), nod_cex = 2, lab_cex = .5, lab_lwd = 1, lab_grid_size = 70)
 
-# inspect words
-neighborhood_plot(edg_to_adj(net_comunity), k = 2, node = 'dog', nod_cex = 2, lab_cex = 1)
+# inspect neighborhood of cat 
+neighborhood_plot(edg_to_adj(net_comunity), k = 3, node = 'cat', nod_cex = 2, lab_cex = 1)
+neighborhood_plot(edg_to_adj(net_threshold), k = 3, node = 'cat', nod_cex = 2, lab_cex = 1)
+neighborhood_plot(edg_to_adj(net_rw), k = 3, node = 'cat', nod_cex = 2, lab_cex = 1)
+
 ```
+
+The networks were plotted using the plotting functions currently available in `memnet`: `network_plot` and `neighborhood` plot, which plot the entire network or the k-
+neighborhood of a specific node, respectively.
+
+## Network growth models
+
+A key question in research on semantic networks is their developmental trajectory and memory growth models one possible answer. `memnet` implements a total of five network growth models:
+
+1. `grow_st` grows networks according to Steyvers and Tenenbaum (2004). 
+2. `grow_hk` grows networks according to Holme and Kim (2002). 
+4. `grow_ba` grows networks according to Watts and Strogatz (1998).
+3. `grow_ws` grows networks according to Barabási and Albert (1999). 
+5. `grow_lattice` grows regular lattice networks. 
+
+The `grow_ba` grows networks with scale-free degree distributions using a process 
+known as preferential attachment, which connects incoming nodes preferably with
+nodes that are already highly connected. `grow_st` and `grow_hk` share this 
+aspect of preferential attachment, but add to triad formation process that connects
+incoming nodes to neighbors of previously connected nodes, in order to account 
+for the high clustering of naturally occurring (memory) networks. `grow_ws` mixes
+regular lattices (`grow_lattices`) with a random graph in order to simultaneously
+create high clustering and low average shortest path lengths, a property 
+combination known as small-world.
+
+
+```{r, fig.width = 7, fig.height=5, warning = FALSE}
+
+# plot networks of different growth mechanisms
+network_plot(grow_st(20, 2))
+network_plot(grow_hk(20, 2, p = .3))
+network_plot(grow_ba(20, 2))
+network_plot(grow_ws(20, 4, p = .5))
+network_plot(grow_ws(20, 4))
+
+```
+
+## Simulate memory access using switcher-random walks
+
+Access from memory is often understood as a switcher-random process operating on an underlying memory network. `memnet` contains various functions to implement such switcher-random walk processes that allow simulation of behavioral data. `fluency` and its fast, imprecise sibling `ffluency` produce sequences of memory responses based on a censored, switcher-random walk that emits responses only for first visits to a node. `search_rw` and its repeated version `search_rw_mean` use switcher-random walk processes to determine the (average) distance between nodes taken account of the entire network structure rather than only the direct path. 
+
+```{r, fig.width = 7, fig.height=5, warning = FALSE}
+
+# extract adjlist from community network
+adjlist = edg_to_adjlist(net_comunity) 
+
+# simulate fluency sequences
+f = fluency(adjlist, c(10, 14, 16, 18))
+restore_names(f, get_names(net_comunity))
+
+# simulate fluency sequences
+s = search_rw_mean(adjlist, 1:5, 1:5, nrep = 100)
+restore_names(s, get_names(net_comunity))
+```
+
+
 

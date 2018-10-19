@@ -7,6 +7,9 @@
 one_fluency(adj_list, n, pjump, type)
 }
 \arguments{
+\item{adj_list}{a list containing row indices of nodes adjacent node to the ith
+node as created by \link{get_adjlist}.}
+
 \item{n}{integer specifying the number of unique productions.}
 
 \item{pjump}{numeric specifying the probability of a jump.}
@@ -17,9 +20,6 @@ nodes proportional to their degree. For \code{type = 1} the process
 selects a random node to serve both as the start node and the jump node.
 For \code{type = 2} the process selects the start and any jump nodes
 uniformly at random.}
-
-\item{adjlist}{a list containing row indices of nodes adjacent node to the ith
-node as created by \link{get_adjlist}.}
 }
 \value{
 Integer vector containing the indices of the fluency productions.

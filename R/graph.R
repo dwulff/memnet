@@ -60,49 +60,105 @@ edg_to_adj = function(edg, weight = NULL, directed = FALSE, adjlist = FALSE){
 #'   entries in \code{edg}.
 #'
 #' @export
-
 edg_to_adjlist = function(edg){
 
   # out
   edg_to_adj(edg, adjlist = TRUE)
   }
 
-#' Rename memnet objects
+#' Restore names of memnet objects
 #'
-#' Function replaces the index vectors created by \link{adjlist} or \link{fluency}
-#' by their original names.
+#' Function replaces the index vectors created by \link{get_adjlist}
+#' \link{fluency}, or \link{search_rw} by their original names.
 #'
-#' @param dat lists of indices that correspond to positions in a name vector.
+#' @param dat lists of indices that correspond to positions in a name vector or
+#'   matrix with two initial columns containing node indices.
 #' @param names character vector giving the names.
 #'
 #' @return lists of character vectors.
 #'
 #' @export
-rename_memnet = function(dat, names){
+restore_names = function(dat, names){
 
   # test of list
-  if(!is.list(dat)) stop('dat must be of type list.')
-
-  # get inds
-  inds = unlist(dat)
-  if(!is.integer(inds)) stop('dat must contain integer vectors.')
-
-  # test max index
-  if(max(inds) > length(names)) stop('name vector is too short.')
-
-  # rename vectors
-  n = length(dat)
-  for(i in 1:n){
-    dat[[i]] = names[dat[[i]]]
-  }
-
-  # check for names
-  list_names = names(dat)
-  if(!is.null(names(dat))){
-    names(dat) = as.integer(list_names)
+  if(!is.list(dat) & !is.matrix(dat)){
+    stop('dat must be of type list or matrix.')
     }
+
+  if(is.list(dat)){
+
+    # get inds
+    inds = unlist(dat)
+    if(!is.integer(inds)) stop('dat must contain integer vectors.')
+
+    # test max index
+    if(max(inds) > length(names)) stop('name vector is too short.')
+
+    # rename vectors
+    n = length(dat)
+    for(i in 1:n){
+      dat[[i]] = names[dat[[i]]]
+    }
+
+    # check for names
+    list_names = names(dat)
+    if(!is.null(names(dat))){
+      names(dat) = as.integer(list_names)
+      }
+
+  } else {
+
+    # round first two columns
+    ind_cols = dat[,1:2]
+    mode(ind_cols) = 'integer'
+
+    # get inds
+    inds = c(ind_cols)
+    if(!is.integer(inds)) stop('first two columns of dat must contain integer vectors.')
+
+    # test max index
+    if(max(inds) > length(names)) stop('name vector is too short.')
+
+    # rename vectors
+    dat[, 1] = names[ind_cols[, 1]]
+    dat[, 2] = names[ind_cols[, 2]]
+
+  }
 
   # out
   dat
   }
+
+#' Get node names of memnet objects
+#'
+#' Function extracts names from objects created from edgelists and adjacency
+#' matrices.
+#'
+#' @param dat numeric or character matrix containing an edgelist or adjacency
+#'   matrix.
+#'
+#' @return lists of character vectors.
+#'
+#' @export
+get_names = function(dat){
+
+  # check if matrix
+  if(!is.matrix(dat)) stop('dat must be matrix.')
+
+  # check if adj
+  if(nrow(dat) == ncol(dat)){
+    names = ncol(dat)
+    } else {
+    if(mode(dat) == 'character'){
+      names = get_names_c(dat)
+      } else {
+      names = get_names_i(dat)
+      }
+    }
+
+  # out
+  names
+  }
+
+
 

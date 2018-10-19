@@ -9,10 +9,11 @@ grow_ws(n = 100L, k = 10L, p = 0.2)
 \arguments{
 \item{n}{Integer. Number of nodes in the network.}
 
+\item{k}{Integer. Number of edges added for each incoming node. Can only be
+even.}
+
 \item{p}{Numeric. Proability that an edge e_ij is rewired to e_ik with k being
 randomly drawn from the set of nodes.}
-
-\item{m}{Integer. Number of edges added for each incoming node.}
 }
 \value{
 n x n adjacency matrix.

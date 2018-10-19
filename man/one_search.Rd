@@ -8,6 +8,9 @@ one_search(adj_list, start, observe, nmax = 1000L, pjump = 0,
   type = 0L)
 }
 \arguments{
+\item{adj_list}{a list containing row indices of nodes adjacent node to the ith
+node as created by \link{get_adjlist}.}
+
 \item{start}{integer vector of length 1 specifying the index of
 the start node.}
 

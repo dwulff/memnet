@@ -20,7 +20,12 @@ and end points.}
 appropriate length.}
 
 \item{layout}{layout function from the \code{igraph} package. Default is
-\link{igraph::layout.fruchterman.reingold}.}
+\link[igraph]{layout.fruchterman.reingold}.}
+
+\item{nod_col}{character vector of length 1 or length |V| specifying the
+node colors.}
+
+\item{nod_cex}{numeric speciying the size of the node circles.}
 
 \item{nod_shadow}{logical specifiying whether nodes should have shadows. Node
 shodow color is created from darkening \code{node_col}.}
@@ -49,9 +54,6 @@ cells closest to the associated node.}
 
 \item{lab_padding}{numeric vector of length 2 specifying the spacing among
 labels and between labels and nodes on the x and y dimension.}
-
-\item{node_col}{character vector of length 1 or length |V| specifying the
-node colors.}
 }
 \value{
 nothing. A plot is created in \link{dev.cur}.

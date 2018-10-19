@@ -11,7 +11,8 @@ search_rw_mean(adjlist, start, observe, nmax = 1000L, pjump = 0,
 \item{adjlist}{a list containing row indices of nodes adjacent node to the ith
 node as created by \link{get_adjlist}.}
 
-\item{start}{index of the start vertix.}
+\item{start}{integer vector of length 1 or larger specifying the index of
+the start node.}
 
 \item{observe}{integer vector specifying the nodes whose first visits should be recorded.}
 
@@ -25,6 +26,9 @@ nodes proportional to their degree. For \code{type = 1} the process
 selects a random node to serve both as the start node and the jump node.
 For \code{type = 2} the process selects the start and any jump nodes
 uniformly at random.}
+
+\item{nrep}{integer specifying the number of iterations across which
+aggregates are computed.}
 }
 \value{
 Numeric, 3 column matrix containing in each row the start node, the end node, and

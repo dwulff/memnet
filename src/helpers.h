@@ -49,7 +49,7 @@ double trm(std::vector<double> x, std::vector<double> y);
 
 // random integer
 inline int rndint(int n){
-  return rand() % n;
+  return std::rand() % n;
   }
 
 // allocate

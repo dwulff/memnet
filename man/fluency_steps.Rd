@@ -7,6 +7,9 @@
 fluency_steps(adjlist, n, pjump = 0, type = 0L)
 }
 \arguments{
+\item{adjlist}{a list containing row indices of nodes adjacent node to the ith
+node as created by \link{get_adjlist}.}
+
 \item{n}{integer vector specifying the numbers of production.}
 
 \item{pjump}{numeric specifying the probability of a jump.}

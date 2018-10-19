@@ -72,14 +72,14 @@ k_dist = function(adj_1, adj_2,
 
   # to igraph
   g1 = igraph::graph_from_adjacency_matrix(adj_1, mode = mode_1)
-  if(!is.null(weights_1)) igraph::E(g1)$weight = weights
+  if(!is.null(weights_1)) igraph::E(g1)$weight = weights_1
   g2 = igraph::graph_from_adjacency_matrix(adj_2, mode = mode_2)
-  if(!is.null(weights_2)) igraph::E(g2)$weight = weights
+  if(!is.null(weights_2)) igraph::E(g2)$weight = weights_2
 
   # get degree distance
   da = igraph::degree.distribution(g1)
   dg = igraph::degree.distribution(g2)
-  k_dist = memnet:::trm(da, dg)
+  k_dist = trm(da, dg)
 
   # out
   names(k_dist) = 'k_dist'
@@ -251,7 +251,7 @@ common_subgraphs = function(adj_1, adj_2,
   # to igraph 1
   if(class(adj_1) != 'igraph'){
     g1 = igraph::graph_from_adjacency_matrix(adj_1, mode = mode_1)
-    if(!is.null(weights_1)) igraph::E(g1)$weight = weights
+    if(!is.null(weights_1)) igraph::E(g1)$weight = weights_1
     } else {
     g1 = adj_1
     }
@@ -259,7 +259,7 @@ common_subgraphs = function(adj_1, adj_2,
   # to igraph 2
   if(class(adj_2) != 'igraph'){
     g2 = igraph::graph_from_adjacency_matrix(adj_2, mode = mode_2)
-    if(!is.null(weights_2)) igraph::E(g2)$weight = weights
+    if(!is.null(weights_2)) igraph::E(g2)$weight = weights_2
     } else {
     g2 = adj_2
     }
@@ -290,6 +290,7 @@ common_subgraphs = function(adj_1, adj_2,
 #'
 #' @inheritParams l_comp
 #' @inheritParams k_dist
+#' @inheritParams network_stats
 #'
 #' @return List containing the two subgraphs.
 #'
@@ -303,7 +304,7 @@ common_subgraph_stats = function(adj_1, adj_2,
   # to igraph 1
   if(class(adj_1) != 'igraph'){
     g1 = igraph::graph_from_adjacency_matrix(adj_1, mode = mode_1)
-    if(!is.null(weights_1)) igraph::E(g1)$weight = weights
+    if(!is.null(weights_1)) igraph::E(g1)$weight = weights_1
     } else {
     g1 = adj_1
     }
@@ -311,7 +312,7 @@ common_subgraph_stats = function(adj_1, adj_2,
   # to igraph 2
   if(class(adj_2) != 'igraph'){
     g2 = igraph::graph_from_adjacency_matrix(adj_2, mode = mode_2)
-    if(!is.null(weights_2)) igraph::E(g2)$weight = weights
+    if(!is.null(weights_2)) igraph::E(g2)$weight = weights_2
     } else {
     g2 = adj_2
     }

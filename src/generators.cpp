@@ -71,7 +71,7 @@ std::vector<int> getnonneighbors(NumericMatrix adj,int node){
 }
 
 int randint(int n){
-  return rand() % n;
+  return std::rand() % n;
   }
 
 // [[Rcpp::export]]
@@ -181,11 +181,11 @@ int unconnectedneighbor(NumericMatrix adj, int from, int to){
   }
 
 
-// [[Rcpp::export]]
-void test(int n = 100, int m = 5){
-  std::vector<int> neighbors, degrees(m,0.0);
-  for(int i = 0; i < n; ++i) std::cout << selectnode(degrees) << '\n';
-  }
+// // [[Rcpp::export]]
+// void test(int n = 100, int m = 5){
+//   std::vector<int> neighbors, degrees(m,0.0);
+//   for(int i = 0; i < n; ++i) std::cout << selectnode(degrees) << '\n';
+//   }
 
 //' Holme and Kim (2002) network growth model
 //'
@@ -348,9 +348,10 @@ void sort_3(IntegerMatrix& mat, IntegerVector by){
 //' regular lattice with probability \code{p}.
 //'
 //' @param n Integer. Number of nodes in the network.
-//' @param m Integer. Number of edges added for each incoming node.
+//' @param k Integer. Number of edges added for each incoming node. Can only be
+//'   even.
 //' @param p Numeric. Proability that an edge e_ij is rewired to e_ik with k being
-//' randomly drawn from the set of nodes.
+//'   randomly drawn from the set of nodes.
 //'
 //' @return n x n adjacency matrix.
 //'
@@ -388,7 +389,7 @@ IntegerMatrix grow_ws(int n = 100, int k = 10, double p = .2){
   for(int i = 0; i < n_edges; ++i){
     double p_cur = double(std::rand())/RAND_MAX;
     if(p > p_cur){
-      int new_j = rand() % n;
+      int new_j = std::rand() % n;
       if(new_j != edg(i, 0) && adj(edg(i, 0), new_j) == 0){
         adj(edg(i,0), edg(i,1)) = 0;
         adj(edg(i,1), edg(i,0)) = 0;
@@ -412,8 +413,7 @@ IntegerMatrix grow_ws(int n = 100, int k = 10, double p = .2){
 //'
 //' Grow regular lattice networks, in which every node is connected to m neighbors.
 //'
-//' @param n Integer. Number of nodes in the network.
-//' @param m Integer. Number of edges added for each incoming node.
+//' @inheritParams grow_ws
 //'
 //' @return n x n adjacency matrix.
 //'

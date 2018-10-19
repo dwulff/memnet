@@ -7,6 +7,9 @@
 ffsearch(adjlist, n, pjump = 0, type = 0L, string = FALSE)
 }
 \arguments{
+\item{adjlist}{a list containing row indices of nodes adjacent node to the ith
+node as created by \link{get_adjlist}.}
+
 \item{n}{integer vector specifying for each sequence the maximum numbers of
 productions. Function may return fewer than \code{n}.}
 

@@ -9,7 +9,8 @@ grow_lattice(n = 100L, k = 10L)
 \arguments{
 \item{n}{Integer. Number of nodes in the network.}
 
-\item{m}{Integer. Number of edges added for each incoming node.}
+\item{k}{Integer. Number of edges added for each incoming node. Can only be
+even.}
 }
 \value{
 n x n adjacency matrix.

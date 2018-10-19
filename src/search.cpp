@@ -95,7 +95,7 @@ void add_1(std::vector<int> &items){
 //' the network and where it jumps to is further controlled
 //' by \code{type}. Neighbors are always selected uniformly.
 //'
-//' @param adjlist a list containing row indices of nodes adjacent node to the ith
+//' @param adj_list a list containing row indices of nodes adjacent node to the ith
 //'   node as created by \link{get_adjlist}.
 //' @param n integer specifying the number of unique productions.
 //' @param pjump numeric specifying the probability of a jump.
@@ -196,6 +196,8 @@ std::vector<int> one_fluency(GenericVector adj_list,
 //' For details see \link{one_fluency}.
 //'
 //' @inheritParams one_fluency
+//' @param adjlist a list containing row indices of nodes adjacent node to the ith
+//'   node as created by \link{get_adjlist}.
 //' @param n integer vector specifying for each sequence the number of
 //'   unique productions.
 //' @param string logical specifying whether the output should be of mode character.
@@ -241,7 +243,7 @@ GenericVector fluency(GenericVector adjlist,
 //' that if repetitions occur \code{ffluency} will produce sequences of length
 //' \code{min(n * 3 - k, n)} where k is the number of repeptitions.
 //'
-//' @inheritParams fluency
+//' @inheritParams one_fluency
 //' @param n integer specifying the maximum number of productions. Function may
 //' return fewer than \code{n}.
 //'
@@ -314,6 +316,7 @@ std::vector<int> one_ffluency(GenericVector adj_list,
 //' For details see \link{one_ffluency}.
 //'
 //' @inheritParams one_ffluency
+//' @inheritParams fluency
 //' @param n integer vector specifying for each sequence the maximum numbers of
 //' productions. Function may return fewer than \code{n}.
 //' @param string logical specifying whether the output should be of mode character.
@@ -455,12 +458,8 @@ GenericVector ffsearch(GenericVector adjlist,
 //' required to produce a sequence of unique productions, rather than the
 //' productions itself.
 //'
-//' @inheritParams fluency
+//' @inheritParams one_fluency
 //' @param n integer specifying the number of productions.
-//' @param random bool controlling jump nodes.
-//'   For \code{random = TRUE} the process selects jump at random. For
-//'   \code{random = FALSE} the process always jumps back to the start node. The
-//'   start node is always selected at random.
 //'
 //'
 //' @return Integer vector containing the indices of the fluency productions.
@@ -528,6 +527,7 @@ int one_fluency_steps(GenericVector adj_list, int n, double pjump, int type){
 //' For details see \link{one_fluency_steps}.
 //'
 //' @inheritParams one_fluency_steps
+//' @inheritParams fluency
 //' @param n integer vector specifying the numbers of production.
 //'
 //' @return List of character vectors containing the indices of the fluency productions.
@@ -565,7 +565,7 @@ std::vector<int> fluency_steps(GenericVector adjlist,
 //' If a node specified in \code{observe} has never been visited then the function
 //' returns \code{nmax} for that node.
 //'
-//' @inheritParams fluency
+//' @inheritParams one_fluency
 //' @param start integer vector of length 1 specifying the index of
 //'   the start node.
 //' @param observe integer vector of length 1 or larger specifying the target
@@ -669,6 +669,7 @@ NumericMatrix one_search(GenericVector adj_list,
 //' If a node specified in \code{observe} has never been visited then the function
 //' returns \code{nmax} for that node.
 //'
+//' @inheritParams one_search
 //' @inheritParams fluency
 //' @param start integer vector of length 1 or larger specifying the index of
 //'   the start node.
@@ -724,9 +725,11 @@ NumericMatrix search_rw(GenericVector adjlist,
 //' returns \code{nmax} for that node.
 //'
 //' @inheritParams fluency
-//' @param start index of the start vertix.
+//' @inheritParams search_rw
 //' @param observe integer vector specifying the nodes whose first visits should be recorded.
 //' @param nmax integer specifying the maximum number of steps.
+//' @param nrep integer specifying the number of iterations across which
+//'   aggregates are computed.
 //'
 //' @return Numeric, 3 column matrix containing in each row the start node, the end node, and
 //' the (minimum) number of steps it took to reach the end node from the start node.

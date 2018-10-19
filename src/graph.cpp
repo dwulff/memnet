@@ -20,7 +20,7 @@ std::vector<int> unique_int(std::vector<int> v){
 
 // [[Rcpp::export]]
 int rint(int n){
-  return rand() % n;
+  return std::rand() % n;
   }
 
 // [[Rcpp::export]]
@@ -219,7 +219,7 @@ double prbs(std::vector<double> x, double p){
 // determine the largest difference between 2 cumulative distributions
 // [[Rcpp::export]]
 double trm(std::vector<double> x, std::vector<double> y){
-  int i,n,nx = x.size(),ny = y.size();
+  int i,n;
   double p, d, dmax = 0;
   std::vector<double> cumx = csum(x), cumy = csum(y);
   n = cumx.size();
@@ -237,5 +237,56 @@ double trm(std::vector<double> x, std::vector<double> y){
   return dmax;
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//          HELPERS
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+// get names from graph
+// [[Rcpp::export]]
+std::vector<std::string> get_names_c(CharacterMatrix &edg){
+  int n = edg.nrow();
+  std::vector<std::string> names;
+  std::string cur_string;
+  bool is_in;
+  for(int i = 0; i < n; ++i){
+
+    // from
+    cur_string = as<std::string>(edg(i, 0));
+    is_in = find(names.begin(), names.end(), cur_string) != names.end();
+    if(is_in != true) names.push_back(cur_string);
+
+    // to
+    cur_string = as<std::string>(edg(i, 1));
+    is_in = find(names.begin(), names.end(), cur_string) != names.end();
+    if(is_in != true) names.push_back(cur_string);
+    }
+
+  return names;
+  }
+
+
+// get names from graph
+// [[Rcpp::export]]
+std::vector<int> get_names_i(IntegerMatrix &edg){
+  int n = edg.nrow();
+  std::vector<int> names;
+  int cur_int;
+  bool is_in;
+  for(int i = 0; i < n; ++i){
+
+    // from
+    cur_int = edg(i, 0);
+    is_in = find(names.begin(), names.end(), cur_int) != names.end();
+    if(is_in != true) names.push_back(cur_int);
+
+    // to
+    cur_int = edg(i, 1);
+    is_in = find(names.begin(), names.end(), cur_int) != names.end();
+    if(is_in != true) names.push_back(cur_int);
+    }
+
+  return names;
+  }

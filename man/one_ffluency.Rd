@@ -7,6 +7,9 @@
 one_ffluency(adj_list, n, pjump, type)
 }
 \arguments{
+\item{adj_list}{a list containing row indices of nodes adjacent node to the ith
+node as created by \link{get_adjlist}.}
+
 \item{n}{integer specifying the maximum number of productions. Function may
 return fewer than \code{n}.}
 

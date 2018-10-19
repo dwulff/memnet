@@ -9,7 +9,7 @@
 
 inPi = function(x) (x/360)*(pi*2)
 
-x_circ  = function(n,deg,rad,orig,start){
+x_circ  = function(n, deg, rad, orig, start){
   degs = seq(0,deg,length = n + 1)
   cbind(degs, cos(inPi(degs))*rad + orig[1])}
 
@@ -29,7 +29,7 @@ circle_raw<-function(n,deg,rad,orig){
 
 circle = function(rad, orig, ..., n = 100){
 
-  polygon(circle_raw(n,360,rad,orig),...)
+  graphics::polygon(circle_raw(n,360,rad,orig),...)
 
 }
 
@@ -42,7 +42,7 @@ circle = function(rad, orig, ..., n = 100){
 #'
 #' @param col_1,col_2 character vector of length one or of matching length containing
 #'   colors either as a color name (see \link{colors}), rgb format (see \link{rgb}), or
-#'   hex format (see \link{col2hex}).
+#'   hex format.
 #' @param weight numeric between 0 and 1 specifying the relative mixing weight for color
 #'   one. E.g., \code{weight = .8} means that final color is composed of 80 percent
 #'   \code{col_2} and 20 percent \code{col_1}.
@@ -234,9 +234,10 @@ set_saturation = function(col, saturation = .5){
 #' @param names optional character vector specifying the node names. Must be of
 #'   appropriate length.
 #' @param layout layout function from the \code{igraph} package. Default is
-#'   \link{igraph::layout.fruchterman.reingold}.
-#' @param node_col character vector of length 1 or length |V| specifying the
+#'   \link[igraph]{layout.fruchterman.reingold}.
+#' @param nod_col character vector of length 1 or length |V| specifying the
 #'   node colors.
+#' @param nod_cex numeric speciying the size of the node circles.
 #' @param nod_shadow logical specifiying whether nodes should have shadows. Node
 #'   shodow color is created from darkening \code{node_col}.
 #' @param edg_col character vector of length 1 of length |E| specifying the edge
@@ -370,7 +371,7 @@ network_plot = function(adj,
 
     # find closest non-taken grid position
     pnt = lyt[i,]
-    tst = subset(grd,free == T)
+    tst = subset(grd, grd$free == T)
     dif = sqrt((tst$x - pnt[1])**2 + (tst$y - pnt[2])**2)
     sel = which(dif==min(dif))[1]
 
@@ -389,20 +390,20 @@ network_plot = function(adj,
   # ------ Plot
 
   # set canvas
-  plot.new()
-  par(mar=c(.5,.5,1.5,.5))
-  plot.window(c(-.06,1.06),c(-.06,1.06))
+  graphics::plot.new()
+  graphics::par(mar=c(.5,.5,1.5,.5))
+  graphics::plot.window(c(-.06,1.06),c(-.06,1.06))
 
   # draw label lines
   if(length(lab_lwd) == 1) lab_lwd = rep(lab_lwd[1], nrow(lyt))
   if(length(lab_lcol) == 1) lab_lcol = rep(lab_lcol[1], nrow(lyt))
   lab_lcol
   for(i in 1:nrow(lyt)){
-    lines(c(lyt[i, 1], txt.pos[i, 1]),
-          c(lyt[i, 2], txt.pos[i, 2]),
-          lty = 3,lwd = (lab_lwd[i] - .5) ** .5, col = lab_lcol[i])
+    graphics::lines(c(lyt[i, 1], txt.pos[i, 1]),
+                    c(lyt[i, 2], txt.pos[i, 2]),
+                    lty = 3,lwd = (lab_lwd[i] - .5) ** .5, col = lab_lcol[i])
     }
-  points(txt.pos,pch=16,lwd=lab_lwd,col='white',cex = lab_cex)
+  graphics::points(txt.pos,pch=16,lwd=lab_lwd,col='white',cex = lab_cex)
 
   # draw edges
   if(length(edg_col) == 1) edg_col = rep(edg_col[1], nrow(edg))
@@ -410,7 +411,7 @@ network_plot = function(adj,
   for(i in 1:nrow(edg)){
     from=lyt[edg[i, 1],]
     to=lyt[edg[i, 2],];
-    lines(c(from[1], to[1]), c(from[2], to[2]),
+    graphics::lines(c(from[1], to[1]), c(from[2], to[2]),
           lwd = edg_lwd[i], col = edg_col[i])
     }
 
@@ -420,10 +421,10 @@ network_plot = function(adj,
   if(length(nod_col) == 1) nod_col = rep(nod_col[1], nrow(lyt))
   for(i in 1:nrow(lyt)){
     if(nod_shadow == TRUE) {
-      points(lyt[i,1]-.004, lyt[i,2]-.004,
+      graphics::points(lyt[i,1]-.004, lyt[i,2]-.004,
       pch = 16, col = cmix(nod_col[i], 'black', .8), cex = nod_cex[i])
       }
-    points(lyt[i, 1], lyt[i, 2], pch = 16,
+    graphics::points(lyt[i, 1], lyt[i, 2], pch = 16,
            col = nod_col[i], cex = nod_cex[i])
   }
 
@@ -431,18 +432,18 @@ network_plot = function(adj,
   # draw label background
   for(i in 1:nrow(txt.pos)){
     n = nchar(names[i])
-    rect(txt.pos[i,1]-.007*n**.92,
-         txt.pos[i,2]-.015,
-         txt.pos[i,1]+.007*n**.92,
-         txt.pos[i,2]+.015,
-         col=rgb(1,1,1,alpha=.3),border=NA)
+    graphics::rect(txt.pos[i,1]-.007*n**.92,
+                   txt.pos[i,2]-.015,
+                   txt.pos[i,1]+.007*n**.92,
+                   txt.pos[i,2]+.015,
+                   col=grDevices::rgb(1,1,1,alpha=.3),border=NA)
     }
 
   # draw labels
   if(length(lab_cex) == 1) lab_cex = rep(lab_cex[1], nrow(lyt))
   if(length(lab_col) == 1) lab_col = rep(lab_col[1], nrow(lyt))
-  text(txt.pos[, 1], txt.pos[, 2], labels = names,
-       font = 1, cex = lab_cex, col = lab_col)
+  graphics::text(txt.pos[, 1], txt.pos[, 2], labels = names,
+                 font = 1, cex = lab_cex, col = lab_col)
   }
 
 
@@ -456,7 +457,7 @@ network_plot = function(adj,
 #'   object of class \code{"igraph"} or an edge list, i.e., a two-column
 #'   \code{matrix} or \code{data.frame} containing specifying the edges start
 #'   and end points.
-#' @param node optional character vector specifiying the node names.
+#' @param names optional character vector specifiying the node names.
 #' @param node integer specifying the row index (within the adjacency
 #'   matrix) of the node whose the neighborhood should be plotted.
 #'   Alternatively the node name.
@@ -464,9 +465,9 @@ network_plot = function(adj,
 #'   the plot will contain all nodes that are \code{k} or fewer steps away
 #'   from \code{v}.
 #' @param nod_col character vector of length 1 specifying the node colors.
-#' @param nod_shaing logical specifying whether the node colors should be shaded
+#' @param nod_shading logical specifying whether the node colors should be shaded
 #'   as a function of the distance to \code{node}.
-#' @param \dots arguments to be passed to \link{graph_plot}.
+#' @param \dots arguments to be passed to \link{network_plot}.
 #'
 #' @return nothing. A plot is created in \link{dev.cur}.
 #'
