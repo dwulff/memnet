@@ -96,6 +96,7 @@ std::vector<std::string> strsplit(const std::string & s, const std::string & del
   return parts;
   }
 
+
 // translate word productions into indices
 // based on vector of unique productions producted
 // by set
@@ -446,7 +447,7 @@ CharacterMatrix community_graph(
   int n_edg = starts.size();
   std::vector<int> indices;
   for(int i = 0; i < n_edg; ++i){
-    if(starts[i] != "NA" & ends[i] != "NA") indices.push_back(i);
+    if((starts[i] != "NA") & (ends[i] != "NA")) indices.push_back(i);
     }
   igr = indices.size();
 

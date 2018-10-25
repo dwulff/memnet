@@ -451,7 +451,7 @@ network_plot = function(adj,
 #' Neighborhood plot
 #'
 #' Plot k-Neighborhood of given node containing all nodes with distances
-#' ≤ k from given node.
+#' larger than k from given node.
 #'
 #' @param adj numeric matrix representing the adjacency matrix. Can also be an
 #'   object of class \code{"igraph"} or an edge list, i.e., a two-column

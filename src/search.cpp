@@ -11,7 +11,7 @@ using namespace Rcpp;
 
 // convert integer vector into Character vector
 // [[Rcpp::export]]
-Rcpp::CharacterVector to_string(std::vector<int> items){
+Rcpp::CharacterVector to_str(std::vector<int> items){
   int n = items.size();
   Rcpp::CharacterVector res(n);
   for(int i = 0; i < n; i++) {
@@ -217,7 +217,7 @@ GenericVector fluency(GenericVector adjlist,
   GenericVector data(nsub);
   for(i = 0; i < nsub; i++){
     if(string == true){
-    data[i] = to_string(one_fluency(adjlist,n[i],pjump,type));
+    data[i] = to_str(one_fluency(adjlist,n[i],pjump,type));
     } else {
     data[i] = one_fluency(adjlist,n[i],pjump,type);
     }
@@ -336,7 +336,7 @@ GenericVector ffsearch(GenericVector adjlist,
   GenericVector data(nsub);
   for(i = 0; i < nsub; i++){
     if(string == true){
-      data[i] = to_string(one_ffluency(adjlist,n[i],pjump,type));
+      data[i] = to_str(one_ffluency(adjlist,n[i],pjump,type));
       } else {
       data[i] = one_ffluency(adjlist,n[i],pjump,type);
       }
@@ -435,7 +435,7 @@ GenericVector ffsearch(GenericVector adjlist,
 //   int i, nsub = n.size();
 //   GenericVector data(nsub);
 //   for(i = 0; i < nsub; i++){
-//     data[i] = to_string(efluency(adjlist,n[i], pjump, type));
+//     data[i] = to_str(efluency(adjlist,n[i], pjump, type));
 //   }
 //   return data;
 // }
