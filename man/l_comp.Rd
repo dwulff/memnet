@@ -4,7 +4,7 @@
 \alias{l_comp}
 \title{Retrieve largest component}
 \usage{
-l_comp(adj, weights = NULL, mode = "undirected")
+l_comp(adj, weights = NULL, mode = "undirected", igraph = FALSE)
 }
 \arguments{
 \item{adj}{numeric matrix representing the adjacency matrix.}
@@ -14,6 +14,9 @@ l_comp(adj, weights = NULL, mode = "undirected")
 \item{mode}{character, either \code{"directed"} or \code{"undirected"},
 specifying whether the network should be interepeted as directed
 or undirected. Defaults to \code{"undirected"}.}
+
+\item{igraph}{logical specifying whether the output should be of class
+\code{"igraph"}.}
 }
 \value{
 A list containing the, now, named adjacency matrix and a numeric value

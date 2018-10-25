@@ -9,6 +9,8 @@
 #' @param mode character, either \code{"directed"} or \code{"undirected"},
 #'   specifying whether the network should be interepeted as directed
 #'   or undirected. Defaults to \code{"undirected"}.
+#' @param igraph logical specifying whether the output should be of class
+#'   \code{"igraph"}.
 #'
 #' @return
 #' A list containing the, now, named adjacency matrix and a numeric value
@@ -16,7 +18,7 @@
 #' to the entire graph.
 #'
 #' @export
-l_comp = function(adj, weights = NULL, mode = 'undirected'){
+l_comp = function(adj, weights = NULL, mode = 'undirected', igraph = FALSE){
 
   # to igraph
   if(class(adj) != 'igraph'){
@@ -38,6 +40,13 @@ l_comp = function(adj, weights = NULL, mode = 'undirected'){
 
   # component
   comp = igraph::induced_subgraph(g,ncmp)
+
+  # return igraph
+  if(igraph == TRUE){
+    out = list("adj" = comp,
+               "rel_size" = msiz / igraph::vcount(g))
+    return(out)
+    }
 
   # return largest component and size of largest component
   out = list("adj" = igraph::get.adjacency(comp, sparse = FALSE),
@@ -206,7 +215,7 @@ network_stats = function(adj, giant = FALSE, weights = NULL, mode = 'undirected'
     }
 
   # get largest component
-  comp   = l_comp(g)
+  comp   = l_comp(g, igraph = TRUE)
   comp_p = comp[[2]]
   if(giant == TRUE){
     g = comp[[1]]
@@ -225,7 +234,7 @@ network_stats = function(adj, giant = FALSE, weights = NULL, mode = 'undirected'
   res = c(n_v, n_e, k, cc, cc_c, aspl, aspl_c, smallw, assor, comp_p)
   names(res) = c('|V|', '|E|', 'k',
                  'C', 'Cc',
-                 'L', 'L_c',
+                 'L', 'Lc',
                  'S', 'A',
                  'p')
   res
