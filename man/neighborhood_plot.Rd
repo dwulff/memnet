@@ -35,5 +35,5 @@ nothing. A plot is created in \link{dev.cur}.
 }
 \description{
 Plot k-Neighborhood of given node containing all nodes with distances
-≤ k from given node.
+larger than k from given node.
 }

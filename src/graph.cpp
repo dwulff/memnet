@@ -18,18 +18,30 @@ std::vector<int> unique_int(std::vector<int> v){
   return v;
   }
 
-// [[Rcpp::export]]
-int rint(int n){
-  return std::rand() % n;
-  }
+// // [[Rcpp::export]]
+// int rint(int n){
+//   return std::rand() % n;
+//   }
+
+// // [[Rcpp::export]]
+// double runi(){
+//   double t,p;
+//   t = std::rand() % 100001;
+//   p = t/100000;
+//   return p;
+//   }
 
 // [[Rcpp::export]]
 double runi(){
-  double t,p;
-  t = std::rand() % 100001;
-  p = t/100000;
+  double p = (Rcpp::runif(1,0,1))[0];
   return p;
   }
+
+
+// [[Rcpp::export]]
+int rint(int n){
+  return (Rcpp::sample(n, 1))[0] - 1;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

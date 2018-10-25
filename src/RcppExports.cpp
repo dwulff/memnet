@@ -339,6 +339,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// randint
+int randint(int n);
+RcppExport SEXP _memnet_randint(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(randint(n));
+    return rcpp_result_gen;
+END_RCPP
+}
 // selectnode
 int selectnode(std::vector<int> ps);
 RcppExport SEXP _memnet_selectnode(SEXP psSEXP) {
@@ -470,6 +481,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// runi
+double runi();
+RcppExport SEXP _memnet_runi() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(runi());
+    return rcpp_result_gen;
+END_RCPP
+}
 // rint
 int rint(int n);
 RcppExport SEXP _memnet_rint(SEXP nSEXP) {
@@ -478,16 +499,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     rcpp_result_gen = Rcpp::wrap(rint(n));
-    return rcpp_result_gen;
-END_RCPP
-}
-// runi
-double runi();
-RcppExport SEXP _memnet_runi() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(runi());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -586,14 +597,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// to_string
-Rcpp::CharacterVector to_string(std::vector<int> items);
-RcppExport SEXP _memnet_to_string(SEXP itemsSEXP) {
+// to_str
+Rcpp::CharacterVector to_str(std::vector<int> items);
+RcppExport SEXP _memnet_to_str(SEXP itemsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::vector<int> >::type items(itemsSEXP);
-    rcpp_result_gen = Rcpp::wrap(to_string(items));
+    rcpp_result_gen = Rcpp::wrap(to_str(items));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -818,6 +829,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_sm", (DL_FUNC) &_memnet_sm, 1},
     {"_memnet_getdegrees", (DL_FUNC) &_memnet_getdegrees, 2},
     {"_memnet_getnonneighbors", (DL_FUNC) &_memnet_getnonneighbors, 2},
+    {"_memnet_randint", (DL_FUNC) &_memnet_randint, 1},
     {"_memnet_selectnode", (DL_FUNC) &_memnet_selectnode, 1},
     {"_memnet_selectnode_power", (DL_FUNC) &_memnet_selectnode_power, 2},
     {"_memnet_grow_st", (DL_FUNC) &_memnet_grow_st, 2},
@@ -829,8 +841,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_grow_ws", (DL_FUNC) &_memnet_grow_ws, 3},
     {"_memnet_grow_lattice", (DL_FUNC) &_memnet_grow_lattice, 2},
     {"_memnet_unique_int", (DL_FUNC) &_memnet_unique_int, 1},
-    {"_memnet_rint", (DL_FUNC) &_memnet_rint, 1},
     {"_memnet_runi", (DL_FUNC) &_memnet_runi, 0},
+    {"_memnet_rint", (DL_FUNC) &_memnet_rint, 1},
     {"_memnet_get_adjlist", (DL_FUNC) &_memnet_get_adjlist, 1},
     {"_memnet_get_neighborhood", (DL_FUNC) &_memnet_get_neighborhood, 3},
     {"_memnet_get_kneighbors", (DL_FUNC) &_memnet_get_kneighbors, 3},
@@ -839,7 +851,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_get_names_c", (DL_FUNC) &_memnet_get_names_c, 1},
     {"_memnet_get_names_i", (DL_FUNC) &_memnet_get_names_i, 1},
     {"_memnet_noverk", (DL_FUNC) &_memnet_noverk, 2},
-    {"_memnet_to_string", (DL_FUNC) &_memnet_to_string, 1},
+    {"_memnet_to_str", (DL_FUNC) &_memnet_to_str, 1},
     {"_memnet_getneighbors", (DL_FUNC) &_memnet_getneighbors, 2},
     {"_memnet_getnext", (DL_FUNC) &_memnet_getnext, 1},
     {"_memnet_unicut", (DL_FUNC) &_memnet_unicut, 2},

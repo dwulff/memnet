@@ -1,6 +1,6 @@
 Package: memnet
 Type: Package
-Title: memnet: Network tools for memory research
+Title: Memnet: Network Tools for Memory Research
 Description: The memnet package provides efficient implementations of network science tools 
 	to facilitate research into human (semantic) memory. In its current version, the package 
 	contains several methods to infer networks from verbal fluency data, various network 

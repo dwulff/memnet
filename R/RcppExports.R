@@ -158,6 +158,10 @@ getnonneighbors <- function(adj, node) {
     .Call('_memnet_getnonneighbors', PACKAGE = 'memnet', adj, node)
 }
 
+randint <- function(n) {
+    .Call('_memnet_randint', PACKAGE = 'memnet', n)
+}
+
 selectnode <- function(ps) {
     .Call('_memnet_selectnode', PACKAGE = 'memnet', ps)
 }
@@ -269,12 +273,12 @@ unique_int <- function(v) {
     .Call('_memnet_unique_int', PACKAGE = 'memnet', v)
 }
 
-rint <- function(n) {
-    .Call('_memnet_rint', PACKAGE = 'memnet', n)
-}
-
 runi <- function() {
     .Call('_memnet_runi', PACKAGE = 'memnet')
+}
+
+rint <- function(n) {
+    .Call('_memnet_rint', PACKAGE = 'memnet', n)
 }
 
 #' Get adjacency list
@@ -350,8 +354,8 @@ noverk <- function(n, k) {
     .Call('_memnet_noverk', PACKAGE = 'memnet', n, k)
 }
 
-to_string <- function(items) {
-    .Call('_memnet_to_string', PACKAGE = 'memnet', items)
+to_str <- function(items) {
+    .Call('_memnet_to_str', PACKAGE = 'memnet', items)
 }
 
 getneighbors <- function(adjlist, pos) {

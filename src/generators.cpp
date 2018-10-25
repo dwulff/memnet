@@ -70,9 +70,15 @@ std::vector<int> getnonneighbors(NumericMatrix adj,int node){
   return neighbors;
 }
 
+// // [[Rcpp::export]]
+// int randint(int n){
+//   return std::rand() % n;
+//   }
+
+// [[Rcpp::export]]
 int randint(int n){
-  return std::rand() % n;
-  }
+  return (Rcpp::sample(n, 1))[0] - 1;
+}
 
 // [[Rcpp::export]]
 int selectnode(std::vector<int> ps){

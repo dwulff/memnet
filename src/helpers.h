@@ -48,9 +48,13 @@ double prbs(std::vector<double> x, double p);
 double trm(std::vector<double> x, std::vector<double> y);
 
 // random integer
+// inline int rndint(int n){
+// return std::rand() % n;
+//  }
+
 inline int rndint(int n){
-  return std::rand() % n;
-  }
+  return (Rcpp::sample(n, 1))[0] - 1;
+}
 
 // allocate
 inline Rcpp::NumericVector allct(int n, int g, int mx){
