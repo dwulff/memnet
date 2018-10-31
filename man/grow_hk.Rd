@@ -22,3 +22,20 @@ Grow networks using Holme & Kim's (2002) model, which combines preferential
 attachment with tunable triad formation flexibly controlling the amount of
 clustering in the network via \code{p}.
 }
+\examples{
+# generate small graph
+grow_hk(n = 6, m = 2, p = .1)
+
+\dontrun{
+# generate large graph, low clustering
+grow_hk(n = 100, m = 10, p = .1)
+
+# generate large graph, high clustering
+grow_hk(n = 100, m = 10, p = .9)
+}
+
+}
+\references{
+Holme, P., & Kim, B. J. (2002). Growing scale-free networks with tunable
+clustering. Physical review E, 65(2), 026107.
+}

@@ -16,3 +16,33 @@ A matrix
 Create a random walk graph from verbal fluency data that includes edges for words
 that occur within a window size of 1.
 }
+\examples{
+
+# get animal fluency data
+data(animal_fluency)
+
+# infer influence network
+inferred_network = rw_graph(animal_fluency)
+
+# Simulate -----
+
+# generate watts strogatz graph
+network = grow_ws(n = 200, k = 10, p = .5)
+
+# generate fluency data
+# sets string equal TRUE as community_graph expects mode character
+fluency_data = fluency(get_adjlist(network), rep(10, 100), string = TRUE)
+
+# infer fluency network
+inferred_network = rw_graph(fluency_data)
+
+}
+\references{
+Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+differences in the semantic networks of younger and older adults.
+https://doi.org/10.31234/osf.io/s73dp
+
+Zemla, J. C., & Austerweil, J. L. (2018). Estimating semantic networks of
+groups and individuals from fluency data. Computational Brain & Behavior,
+1-23.
+}

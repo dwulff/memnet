@@ -18,3 +18,17 @@ n x n adjacency matrix.
 \description{
 Grow regular lattice networks, in which every node is connected to m neighbors.
 }
+\examples{
+# generate small lattice
+grow_lattice(n = 6, k = 2)
+
+\dontrun{
+# generate large lattice
+grow_lattice(n = 100, k = 10, p = .1)
+}
+
+}
+\references{
+Watts, D. J., & Strogatz, S. H. (1998). Collective dynamics of ‘small-world’
+networks. Nature, 393(6684), 440-442.
+}

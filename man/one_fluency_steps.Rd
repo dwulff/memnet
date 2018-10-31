@@ -4,7 +4,7 @@
 \alias{one_fluency_steps}
 \title{Verbal fluency step counter}
 \usage{
-one_fluency_steps(adj_list, n, pjump, type)
+one_fluency_steps(adj_list, n, pjump = 0, type = 0L)
 }
 \arguments{
 \item{adj_list}{a list containing row indices of nodes adjacent node to the ith
@@ -41,4 +41,26 @@ by \code{type}. Neighbors are always selected uniformly.
 In contrast to \link{fluency} and \code{ffluency}, returns the number of steps
 required to produce a sequence of unique productions, rather than the
 productions itself.
+}
+\examples{
+# generate watts strogatz graph
+network = grow_ws(n = 100, k = 10)
+
+# count number of steps needed to create sequence
+one_fluency_steps(get_adjlist(network), 10)
+
+# count number of steps needed to create sequence
+# with high jump probability
+one_fluency_steps(get_adjlist(network), 10, pjump = .5)
+
+}
+\references{
+Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+differences in the semantic networks of younger and older adults.
+https://doi.org/10.31234/osf.io/s73dp
+
+Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+inspired mechanism for network exploration. International Journal of
+Bifurcation and Chaos, 20(03), 913-922.
 }

@@ -16,3 +16,12 @@ A list of vectors containing the indices of adjacent nodes.
 Get list containing adjacent, i.e., neighboring, nodes for each node in the
 graph. Nodes are returned as their row indices of the adjacency matrix.
 }
+\examples{
+
+# generate watts strogatz graph
+network = grow_ws(n = 6, k = 2, p = .5)
+
+# transform to adjlist
+get_adjlist(network)
+
+}

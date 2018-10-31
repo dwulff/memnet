@@ -33,3 +33,25 @@ counts the number of steps required to produce \code{n} unique responses.
 \details{
 For details see \link{one_fluency_steps}.
 }
+\examples{
+# generate watts strogatz graph
+network = grow_ws(n = 100, k = 10)
+
+# count number of steps needed to create sequence
+fluency_steps(get_adjlist(network), c(10, 10))
+
+# count number of steps needed to create sequence
+# with high jump probability
+fluency_steps(get_adjlist(network), c(10, 10), pjump = .5)
+
+}
+\references{
+Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+differences in the semantic networks of younger and older adults.
+https://doi.org/10.31234/osf.io/s73dp
+
+Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+inspired mechanism for network exploration. International Journal of
+Bifurcation and Chaos, 20(03), 913-922.
+}

@@ -21,3 +21,20 @@ n x n adjacency matrix.
 Grow networks using Barabási & Alberts's (2002) preferential
 attachment model.
 }
+\examples{
+# generate small graph
+grow_ba(n = 6, m = 2)
+
+\dontrun{
+# generate large graph, flat degree distribution
+grow_ba(n = 100, m = 10, p = .1)
+
+# generate large graph, steep degree distribution
+grow_ba(n = 100, m = 10, p = 10)
+}
+
+}
+\references{
+Barabási, A. L., & Albert, R. (1999). Emergence of scaling in random
+networks. Science, 286(5439), 509-512.
+}

@@ -18,3 +18,22 @@ n x n adjacency matrix.
 Grow networks using Steyvers and Tenenbaum (2004) model, which combines
 preferential attachment with a triad formation.
 }
+\examples{
+# generate small graph
+grow_st(n = 6, m = 2)
+
+\dontrun{
+# generate large graph
+grow_st(n = 100, m = 10)
+}
+
+}
+\references{
+Steyvers, M., & Tenenbaum, J. B. (2005). The large‐scale structure of
+semantic networks: Statistical analyses and a model of semantic growth.
+Cognitive science, 29(1), 41-78.
+
+Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+differences in the semantic networks of younger and older adults.
+https://doi.org/10.31234/osf.io/s73dp
+}

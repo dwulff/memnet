@@ -35,3 +35,25 @@ Generates multiple verbal fluency sequences using \link{one_fluency}.
 \details{
 For details see \link{one_fluency}.
 }
+\examples{
+# generate watts strogatz graph
+network = grow_ws(n = 100, k = 3)
+
+# create verbal fluency sequences
+fluency(get_adjlist(network), c(10, 10))
+
+# create verbal fluency sequence
+# with high jump probability
+fluency(get_adjlist(network), c(10, 10), pjump = .5)
+
+}
+\references{
+Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+differences in the semantic networks of younger and older adults.
+https://doi.org/10.31234/osf.io/s73dp
+
+Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+inspired mechanism for network exploration. International Journal of
+Bifurcation and Chaos, 20(03), 913-922.
+}

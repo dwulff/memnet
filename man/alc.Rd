@@ -31,3 +31,21 @@ Strogatz (1998). The corrected clustering coefficient normalizes the
 uncorrected one by the \code{average degree / n nodes}, i.e., the expected
 average local clustering for an Erdös-Renyi random graph.
 }
+\examples{
+
+# get fluency data
+data(animal_fluency)
+
+# edge lists of fluency graphs
+edge_list = threshold_graph(animal_fluency)
+
+# get adjacency matrices
+adj = edg_to_adj(edge_list)
+
+# get local average clustering coefficient
+alc(adj)
+
+# get corrected local average clustering coefficient
+alc(adj, types = 'corrected')
+
+}

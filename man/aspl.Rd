@@ -30,3 +30,21 @@ Per default the uncorrected apsl is computed. Otherwise, the uncorrected aspl
 is normalized by \code{log(n nodes)/log(average degree)}, i.e., the expected
 average shortest path length for an Erdös-Renyi random graph.
 }
+\examples{
+
+# get fluency data
+data(animal_fluency)
+
+# edge lists of fluency graphs
+edge_list = threshold_graph(animal_fluency)
+
+# get adjacency matrices
+adj = edg_to_adj(edge_list)
+
+# get average shortest path length
+aspl(adj)
+
+# get corrected average shortest path length
+aspl(adj, types = 'corrected')
+
+}

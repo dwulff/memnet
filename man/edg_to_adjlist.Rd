@@ -18,3 +18,15 @@ a numeric n x n adjacency matrix with n being the number of unique
 Transforms an edge list as returned by \link{community_graph} into an
 adjlist as required by, e.g., \link{fluency}.
 }
+\examples{
+
+# get fluency data
+data(animal_fluency)
+
+# edge list of fluency graph
+edge_list = threshold_graph(animal_fluency[1:3])
+
+# transfrom to adjacency matrix
+edg_to_adjlist(edge_list)
+
+}

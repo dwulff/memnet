@@ -5,6 +5,27 @@ using namespace Rcpp;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+//    HELPERS
+//
+////////////////////////////////////////////////////////////////////////////////
+
+// [[Rcpp::export]]
+std::vector<int> shuffle(std::vector<int> & v){
+  int n = v.size();
+
+  for (int i = 0; i < n - 1; ++i){
+    // generate a random number j such that i <= j < n and
+    // swap the element present at index j with the element
+    // present at current index i
+    int j = i + Rcpp::sample(100000000,1)[0] % (  n - i);
+    std::swap(v[i], v[j]);
+  }
+  return v;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
 //    STEYVERS & TENENBAUM
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +104,7 @@ int randint(int n){
 // [[Rcpp::export]]
 int selectnode(std::vector<int> ps){
   int k, sum = 0, i = 0, n = ps.size();
-  double v, r = double(std::rand()) / RAND_MAX;
+  double v, r = double((Rcpp::runif(1,0,1))[0]);
   for(k = 0; k < n; k++){
     sum += ps[k];
     }
@@ -102,7 +123,7 @@ int selectnode(std::vector<int> ps){
 // [[Rcpp::export]]
 int selectnode_power(std::vector<int> ps, double power){
   int j, sum = 0, i = 0, n = ps.size();
-  double v, r = double(std::rand()) / RAND_MAX;
+  double v, r = double((Rcpp::runif(1,0,1))[0]);
   for(j = 0; j < n; j++){
     ps[j] = std::pow(ps[j], power);
     sum += ps[j];
@@ -130,8 +151,25 @@ int selectnode_power(std::vector<int> ps, double power){
 //'
 //' @return n x n adjacency matrix.
 //'
-//' @export
+//' @references
+//' Steyvers, M., & Tenenbaum, J. B. (2005). The large‐scale structure of
+//' semantic networks: Statistical analyses and a model of semantic growth.
+//' Cognitive science, 29(1), 41-78.
 //'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' @examples
+//' # generate small graph
+//' grow_st(n = 6, m = 2)
+//'
+//' \dontrun{
+//' # generate large graph
+//' grow_st(n = 100, m = 10)
+//' }
+//'
+//' @export
 // [[Rcpp::export]]
 NumericMatrix grow_st(int n = 100, int m = 5){
   if(n < m + 1) return 0;
@@ -142,7 +180,7 @@ NumericMatrix grow_st(int n = 100, int m = 5){
   for(i = m + 1; i < n; i++){
     node      = selectnode(degrees);
     neighbors = getneighbors(adj, node, i);
-    std::random_shuffle(neighbors.begin(),neighbors.end());
+    neighbors = shuffle(neighbors);
     if(neighbors.size() < m) return 0;
     for(j = 0; j < m; j++){
       connect = neighbors[j];
@@ -170,14 +208,14 @@ NumericMatrix emptyseed(int n){
 
 // [[Rcpp::export]]
 double puni(){
-  return double(std::rand()) / RAND_MAX;
+  return double((Rcpp::runif(1,0,1))[0]);
   }
 
 // [[Rcpp::export]]
 int unconnectedneighbor(NumericMatrix adj, int from, int to){
   int i, test;
   std::vector<int> neighbors = getneighbors(adj, to, from);
-  std::random_shuffle(neighbors.begin(),neighbors.end());
+  neighbors = shuffle(neighbors);
   //std::cout << neighbors.size() << '\n';
   for(i = 0; i < neighbors.size(); i++){
     test = adj(neighbors[i],from);
@@ -206,8 +244,23 @@ int unconnectedneighbor(NumericMatrix adj, int from, int to){
 //'
 //' @return n x n adjacency matrix.
 //'
-//' @export
+//' @references
+//' Holme, P., & Kim, B. J. (2002). Growing scale-free networks with tunable
+//' clustering. Physical review E, 65(2), 026107.
 //'
+//' @examples
+//' # generate small graph
+//' grow_hk(n = 6, m = 2, p = .1)
+//'
+//' \dontrun{
+//' # generate large graph, low clustering
+//' grow_hk(n = 100, m = 10, p = .1)
+//'
+//' # generate large graph, high clustering
+//' grow_hk(n = 100, m = 10, p = .9)
+//' }
+//'
+//' @export
 // [[Rcpp::export]]
 NumericMatrix grow_hk(int n = 100, int m = 5, double p = 5){
   int i, f, node;
@@ -228,7 +281,7 @@ NumericMatrix grow_hk(int n = 100, int m = 5, double p = 5){
         }
       if(runi() < p && im < m){
         neighbors = getneighbors(adj, node, f);
-        std::random_shuffle(neighbors.begin(),neighbors.end());
+        neighbors = shuffle(neighbors);
         int nneigh = neighbors.size();
         //for(int j = 0; j < nneigh; ++j) std::cout << neighbors[j] << ' ';
         //std::cout << '\n';
@@ -268,8 +321,23 @@ NumericMatrix grow_hk(int n = 100, int m = 5, double p = 5){
 //'
 //' @return n x n adjacency matrix.
 //'
-//' @export
+//' @references
+//' Barabási, A. L., & Albert, R. (1999). Emergence of scaling in random
+//' networks. Science, 286(5439), 509-512.
 //'
+//' @examples
+//' # generate small graph
+//' grow_ba(n = 6, m = 2)
+//'
+//' \dontrun{
+//' # generate large graph, flat degree distribution
+//' grow_ba(n = 100, m = 10, p = .1)
+//'
+//' # generate large graph, steep degree distribution
+//' grow_ba(n = 100, m = 10, p = 10)
+//' }
+//'
+//' @export
 // [[Rcpp::export]]
 NumericMatrix grow_ba(int n = 100, int m = 5, double power = 1){
   int i, f, node;
@@ -361,8 +429,23 @@ void sort_3(IntegerMatrix& mat, IntegerVector by){
 //'
 //' @return n x n adjacency matrix.
 //'
-//' @export
+//' @references
+//' Watts, D. J., & Strogatz, S. H. (1998). Collective dynamics of ‘small-world’
+//' networks. Nature, 393(6684), 440-442.
 //'
+//' @examples
+//' # generate small, mildly random graph
+//' grow_ws(n = 6, k = 2, p = .2)
+//'
+//' \dontrun{
+//' # generate large, mildly random graph
+//' grow_ws(n = 100, k = 10, p = .1)
+//'
+//' # generate large, highly random graph
+//' grow_ws(n = 100, k = 10, p = 10)
+//' }
+//'
+//' @export
 // [[Rcpp::export]]
 IntegerMatrix grow_ws(int n = 100, int k = 10, double p = .2){
 
@@ -393,9 +476,9 @@ IntegerMatrix grow_ws(int n = 100, int k = 10, double p = .2){
 
   // rewire
   for(int i = 0; i < n_edges; ++i){
-    double p_cur = double(std::rand())/RAND_MAX;
+    double p_cur = double((Rcpp::runif(1,0,1))[0]);
     if(p > p_cur){
-      int new_j = std::rand() % n;
+      int new_j = randint(n);
       if(new_j != edg(i, 0) && adj(edg(i, 0), new_j) == 0){
         adj(edg(i,0), edg(i,1)) = 0;
         adj(edg(i,1), edg(i,0)) = 0;
@@ -423,8 +506,20 @@ IntegerMatrix grow_ws(int n = 100, int k = 10, double p = .2){
 //'
 //' @return n x n adjacency matrix.
 //'
-//' @export
+//' @references
+//' Watts, D. J., & Strogatz, S. H. (1998). Collective dynamics of ‘small-world’
+//' networks. Nature, 393(6684), 440-442.
 //'
+//' @examples
+//' # generate small lattice
+//' grow_lattice(n = 6, k = 2)
+//'
+//' \dontrun{
+//' # generate large lattice
+//' grow_lattice(n = 100, k = 10, p = .1)
+//' }
+//'
+//' @export
 // [[Rcpp::export]]
 IntegerMatrix grow_lattice(int n = 100, int k = 10){
 

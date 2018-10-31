@@ -17,3 +17,15 @@ lists of character vectors.
 Function extracts names from objects created from edgelists and adjacency
 matrices.
 }
+\examples{
+
+# get fluency data
+data(animal_fluency)
+
+# edge list of fluency graph
+edge_list = threshold_graph(animal_fluency)
+
+# get names
+get_names(edge_list)
+
+}

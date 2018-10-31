@@ -27,3 +27,18 @@ to the entire graph.
 Retrieves the largest component. In case of equally sized
 components the first is component is retrieved.
 }
+\examples{
+
+# get fluency data
+data(animal_fluency)
+
+# edge list of fluency graph
+edge_list = threshold_graph(animal_fluency[1:10])
+
+# get adjacency matrix
+adj = edg_to_adj(edge_list)
+
+# get largest component
+l_comp(adj)
+
+}

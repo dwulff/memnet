@@ -30,3 +30,18 @@ corrected average shortest path lengths (L, Lc), the small-world index (S)
 from Humphries & Gurney (2008), assortivity (A), and the size of largest
 component (p) relative to the entire network.
 }
+\examples{
+
+# get fluency data
+data(animal_fluency)
+
+# edge lists of fluency graphs
+edge_list = threshold_graph(animal_fluency)
+
+# get adjacency matrices
+adj = edg_to_adj(edge_list)
+
+# get structural overview
+network_stats(adj)
+
+}

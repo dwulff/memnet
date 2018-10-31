@@ -1,7 +1,10 @@
+// We can now use the BH package
+// [[Rcpp::depends(BH)]]
+
 #include <Rcpp.h>
+#include <boost/lexical_cast.hpp>
 #include "helpers.h"
 using namespace Rcpp;
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9,13 +12,35 @@ using namespace Rcpp;
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// [[Rcpp::export]]
+int smpl(std::vector<double> ps){
+  int k, i = 0, n = ps.size();
+  double v, sum = 0, r = double((Rcpp::runif(1,0,1))[0]);
+  for(k = 0; k < n; k++){
+    sum += ps[k];
+  }
+  v = ps[0] / double(sum);
+  while(i < n && v <= r){
+    i++;
+    v += ps[i] / double(sum);
+  }
+  return i;
+}
+
+// [[Rcpp::export]]
+std::string my_to_string(int value) {
+  std::string stri = boost::lexical_cast<std::string>(value);
+  return stri;
+  }
+
 // convert integer vector into Character vector
 // [[Rcpp::export]]
 Rcpp::CharacterVector to_str(std::vector<int> items){
   int n = items.size();
   Rcpp::CharacterVector res(n);
   for(int i = 0; i < n; i++) {
-    res[i] = std::to_string(items[i]);
+    //res[i] = std::to_string(items[i]);
+    res[i] = my_to_string(items[i]);
   }
   return res;
 }
@@ -110,12 +135,34 @@ void add_1(std::vector<int> &items){
 //'   Indices refer to the row of the item in the original adjacency matrix. See
 //'   \link{get_adjlist}.
 //'
+//' @references
+//'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+//' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+//' inspired mechanism for network exploration. International Journal of
+//' Bifurcation and Chaos, 20(03), 913-922.
+//'
+//' @examples
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10)
+//'
+//' # create verbal fluency sequence
+//' one_fluency(get_adjlist(network), 10)
+//'
+//' # create verbal fluency sequence
+//' # with high jump probability
+//' one_fluency(get_adjlist(network), 10, pjump = .5)
+//'
 //' @export
 // [[Rcpp::export]]
 std::vector<int> one_fluency(GenericVector adj_list,
                              int n,
-                             double pjump,
-                             int type){
+                             double pjump = 0,
+                             int type = 0){
   int i, j, start, npos, reset, nitem = adj_list.size();
   bool jump = false;
   std::vector<int> items;
@@ -206,6 +253,28 @@ std::vector<int> one_fluency(GenericVector adj_list,
 //'   Indices refer to the row of the item in the original adjacency matrix. See
 //'   \link{get_adjlist}.
 //'
+//' @references
+//'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+//' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+//' inspired mechanism for network exploration. International Journal of
+//' Bifurcation and Chaos, 20(03), 913-922.
+//'
+//' @examples
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 3)
+//'
+//' # create verbal fluency sequences
+//' fluency(get_adjlist(network), c(10, 10))
+//'
+//' # create verbal fluency sequence
+//' # with high jump probability
+//' fluency(get_adjlist(network), c(10, 10), pjump = .5)
+//'
 //' @export
 // [[Rcpp::export]]
 GenericVector fluency(GenericVector adjlist,
@@ -251,12 +320,34 @@ GenericVector fluency(GenericVector adjlist,
 //'   Indices refer to the row of the item in the original adjacency matrix. See
 //'   \link{get_adjlist}.
 //'
+//' @references
+//'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+//' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+//' inspired mechanism for network exploration. International Journal of
+//' Bifurcation and Chaos, 20(03), 913-922.
+//'
+//' @examples
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10)
+//'
+//' # create verbal fluency sequences
+//' one_ffluency(get_adjlist(network),  10)
+//'
+//' # create verbal fluency sequence
+//' # with high jump probability
+//' one_ffluency(get_adjlist(network), 10, pjump = .5)
+//'
 //' @export
 // [[Rcpp::export]]
 std::vector<int> one_ffluency(GenericVector adj_list,
                               int n,
-                              double pjump,
-                              int type){
+                              double pjump = 0,
+                              int type = 0){
   int i, j, start, npos, reset, nitem = adj_list.size();
   std::vector<int> items;
   std::vector<int> neighbors;
@@ -325,9 +416,31 @@ std::vector<int> one_ffluency(GenericVector adj_list,
 //'   Indices refer to the row of the item in the original adjacency matrix. See
 //'   \link{get_adjlist}.
 //'
+//' @references
+//'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+//' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+//' inspired mechanism for network exploration. International Journal of
+//' Bifurcation and Chaos, 20(03), 913-922.
+//'
+//' @examples
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10)
+//'
+//' # create verbal fluency sequences
+//' ffluency(get_adjlist(network), c(10, 10))
+//'
+//' # create verbal fluency sequence
+//' # with high jump probability
+//' ffluency(get_adjlist(network), c(10, 10), pjump = .5)
+//'
 //' @export
 // [[Rcpp::export]]
-GenericVector ffsearch(GenericVector adjlist,
+GenericVector ffluency(GenericVector adjlist,
                        NumericVector n,
                        double pjump = 0,
                        int type = 0,
@@ -466,9 +579,31 @@ GenericVector ffsearch(GenericVector adjlist,
 //'   Indices refer to the row of the item in the original adjacency matrix. See
 //'   \link{get_adjlist}.
 //'
+//' @references
+//'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+//' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+//' inspired mechanism for network exploration. International Journal of
+//' Bifurcation and Chaos, 20(03), 913-922.
+//'
+//' @examples
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10)
+//'
+//' # count number of steps needed to create sequence
+//' one_fluency_steps(get_adjlist(network), 10)
+//'
+//' # count number of steps needed to create sequence
+//' # with high jump probability
+//' one_fluency_steps(get_adjlist(network), 10, pjump = .5)
+//'
 //' @export
 // [[Rcpp::export]]
-int one_fluency_steps(GenericVector adj_list, int n, double pjump, int type){
+int one_fluency_steps(GenericVector adj_list, int n, double pjump = 0 , int type = 0){
   int i, start, npos, reset, nitem = adj_list.size();
   std::vector<int> items;
   std::vector<int> neighbors;
@@ -534,6 +669,28 @@ int one_fluency_steps(GenericVector adj_list, int n, double pjump, int type){
 //'   Indices refer to the row of the item in the original adjacency matrix. See
 //'   \link{get_adjlist}.
 //'
+//' @references
+//'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+//' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+//' inspired mechanism for network exploration. International Journal of
+//' Bifurcation and Chaos, 20(03), 913-922.
+//'
+//' @examples
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10)
+//'
+//' # count number of steps needed to create sequence
+//' fluency_steps(get_adjlist(network), c(10, 10))
+//'
+//' # count number of steps needed to create sequence
+//' # with high jump probability
+//' fluency_steps(get_adjlist(network), c(10, 10), pjump = .5)
+//'
 //' @export
 // [[Rcpp::export]]
 std::vector<int> fluency_steps(GenericVector adjlist,
@@ -576,6 +733,29 @@ std::vector<int> fluency_steps(GenericVector adjlist,
 //' @return Numeric, 3 column matrix containing in each row the start node, the
 //' end node, and the (minimum) number of steps it took to reach the end node
 //' from the start node.
+//'
+//' @references
+//'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+//' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+//' inspired mechanism for network exploration. International Journal of
+//' Bifurcation and Chaos, 20(03), 913-922.
+//'
+//' @examples
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10)
+//'
+//' # observe number of steps from node 2
+//' # to nodes 3, 4, and 5
+//' one_search(get_adjlist(network), 2, c(3, 4, 5))
+//'
+//' # observe number of steps from node 2 to nodes 3, 4, and 5
+//' # with high jump probability
+//' one_search(get_adjlist(network), start = 2, observe = c(3, 4, 5), pjump = .5)
 //'
 //' @export
 // [[Rcpp::export]]
@@ -682,6 +862,29 @@ NumericMatrix one_search(GenericVector adj_list,
 //' end node, and the (minimum) number of steps it took to reach the end node
 //' from the start node.
 //'
+//' @references
+//'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+//' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+//' inspired mechanism for network exploration. International Journal of
+//' Bifurcation and Chaos, 20(03), 913-922.
+//'
+//' @examples
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10)
+//'
+//' # observe number of steps from node 2 and 6
+//' # to nodes 3, 4, and 5
+//' search_rw(get_adjlist(network), c(2, 6), c(3, 4, 5))
+//'
+//' # observe number of steps from node 2 and 6 to nodes 3, 4, and 5
+//' # with high jump probability
+//' search_rw(get_adjlist(network), start = c(2, 6), observe = c(3, 4, 5), pjump = .5)
+//'
 //' @export
 // [[Rcpp::export]]
 NumericMatrix search_rw(GenericVector adjlist,
@@ -733,6 +936,29 @@ NumericMatrix search_rw(GenericVector adjlist,
 //'
 //' @return Numeric, 3 column matrix containing in each row the start node, the end node, and
 //' the (minimum) number of steps it took to reach the end node from the start node.
+//'
+//' @references
+//'
+//' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+//' differences in the semantic networks of younger and older adults.
+//' https://doi.org/10.31234/osf.io/s73dp
+//'
+//' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+//' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+//' inspired mechanism for network exploration. International Journal of
+//' Bifurcation and Chaos, 20(03), 913-922.
+//'
+//' @examples
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10)
+//'
+//' # determine mean number of steps from node 2 and 6
+//' # to nodes 3, 4, and 5
+//' search_rw_mean(get_adjlist(network), c(2, 6), c(3, 4, 5))
+//'
+//' # determine mean number of steps from node 2 and 6 to nodes 3, 4, and 5
+//' # with high jump probability
+//' search_rw_mean(get_adjlist(network), start = c(2, 6), observe = c(3, 4, 5), pjump = .5)
 //'
 //' @export
 // [[Rcpp::export]]

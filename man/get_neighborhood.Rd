@@ -4,7 +4,7 @@
 \alias{get_neighborhood}
 \title{Get neighbors \code{k} or fewer steps away}
 \usage{
-get_neighborhood(adj, start, k)
+get_neighborhood(adj, start, k = 1L)
 }
 \arguments{
 \item{adj}{numeric matrix specifying the adjacency matrix.}
@@ -14,8 +14,9 @@ get_neighborhood(adj, start, k)
 \item{k}{integer specifying the maximum distance to the start node.}
 }
 \value{
-A character vector containing nodes \code{k} or fewer steps away
-from \code{start}.
+A numeric matrix of two columns containing nodes indices and the
+geodesic distance to the start nodes of all nodes \code{k} or fewer steps
+away from \code{start}.
 }
 \description{
 Function iterates over graph to identify for a given node all nodes that are
@@ -23,4 +24,16 @@ no more than \code{k} steps apart.
 }
 \details{
 \code{k < 1} will be set to \code{k = 1}.
+}
+\examples{
+
+# generate watts strogatz graph
+network = grow_ws(n = 100, k = 10, p = .5)
+
+# get neighborhood of second node
+get_neighborhood(network, 2)
+
+# get 3-hop neighborhood of second node
+get_neighborhood(network, 2, k = 3)
+
 }

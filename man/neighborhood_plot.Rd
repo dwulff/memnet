@@ -4,8 +4,8 @@
 \alias{neighborhood_plot}
 \title{Neighborhood plot}
 \usage{
-neighborhood_plot(adj, names = NULL, node, k, nod_col = "#E0EED4",
-  nod_shading = TRUE, ...)
+neighborhood_plot(adj, names = NULL, node, k = 2,
+  nod_col = "#E0EED4", nod_shading = TRUE, ...)
 }
 \arguments{
 \item{adj}{numeric matrix representing the adjacency matrix. Can also be an
@@ -36,4 +36,21 @@ nothing. A plot is created in \link{dev.cur}.
 \description{
 Plot k-Neighborhood of given node containing all nodes with distances
 larger than k from given node.
+}
+\examples{
+
+\dontrun{
+# get fluency data
+data(animal_fluency)
+
+# edge list of fluency graph
+edge_list = threshold_graph(animal_fluency[1:40])
+
+# get adjacency matrix
+adj = edg_to_adj(edge_list)
+
+# plot
+neighborhood_plot(adj, node = 'dog', k = 2)
+}
+
 }

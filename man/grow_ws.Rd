@@ -23,3 +23,20 @@ Grow networks using Watts & Strogatz (1999) growth model, which constructs
 in-between regular lattices and random networks by re-wiring edges of a
 regular lattice with probability \code{p}.
 }
+\examples{
+# generate small, mildly random graph
+grow_ws(n = 6, k = 2, p = .2)
+
+\dontrun{
+# generate large, mildly random graph
+grow_ws(n = 100, k = 10, p = .1)
+
+# generate large, highly random graph
+grow_ws(n = 100, k = 10, p = 10)
+}
+
+}
+\references{
+Watts, D. J., & Strogatz, S. H. (1998). Collective dynamics of ‘small-world’
+networks. Nature, 393(6684), 440-442.
+}

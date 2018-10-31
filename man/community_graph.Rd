@@ -28,3 +28,34 @@ within a window size \code{l} and retaining those that occur more frequently
 than \code{min_cooc} and the expectations number of chance productions co-
 occurences based on \code{1-crit}.
 }
+\examples{
+
+# get animal fluency data
+data(animal_fluency)
+
+# infer influence network
+inferred_network = community_graph(animal_fluency)
+
+# Simulate -----
+
+# generate watts strogatz graph
+network = grow_ws(n = 200, k = 10, p = .5)
+
+# generate fluency data
+# sets string equal TRUE as community_graph expects mode character
+fluency_data = fluency(get_adjlist(network), rep(10, 100), string = TRUE)
+
+# infer fluency network
+inferred_network = community_graph(fluency_data)
+
+}
+\references{
+Goñi, J., Arrondo, G., Sepulcre, J., Martincorena, I., de Mendizábal, N. V.,
+Corominas-Murtra, B., ... & Villoslada, P. (2011). The semantic organization
+of the animal category: evidence from semantic verbal fluency and network
+theory. Cognitive processing, 12(2), 183-196.
+
+Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+differences in the semantic networks of younger and older adults.
+https://doi.org/10.31234/osf.io/s73dp
+}

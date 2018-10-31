@@ -59,6 +59,14 @@ int rint(int n){
 //'
 //' @return A list of vectors containing the indices of adjacent nodes.
 //'
+//' @examples
+//'
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 6, k = 2, p = .5)
+//'
+//' # transform to adjlist
+//' get_adjlist(network)
+//'
 //' @export
 // [[Rcpp::export]]
 GenericVector get_adjlist(NumericMatrix adj){
@@ -92,12 +100,24 @@ GenericVector get_adjlist(NumericMatrix adj){
 //' @param start integer specifying the row of the start node in the adjacency matrix.
 //' @param k integer specifying the maximum distance to the start node.
 //'
-//' @return A character vector containing nodes \code{k} or fewer steps away
-//' from \code{start}.
+//' @return A numeric matrix of two columns containing nodes indices and the
+//' geodesic distance to the start nodes of all nodes \code{k} or fewer steps
+//' away from \code{start}.
+//'
+//' @examples
+//'
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10, p = .5)
+//'
+//' # get neighborhood of second node
+//' get_neighborhood(network, 2)
+//'
+//' # get 3-hop neighborhood of second node
+//' get_neighborhood(network, 2, k = 3)
 //'
 //' @export
 // [[Rcpp::export]]
-NumericMatrix get_neighborhood(NumericMatrix adj, int start, int k){
+NumericMatrix get_neighborhood(NumericMatrix adj, int start, int k = 1){
   int ik = 1, n = adj.nrow();
   std::vector<int> todos;
   std::vector<int> new_todos;
@@ -160,12 +180,22 @@ NumericMatrix get_neighborhood(NumericMatrix adj, int start, int k){
 //'   adjacency matrix.
 //' @param k integer specifying the exact distance to the start node.
 //'
-//' @return A character vector containing nodes \code{k} or fewer steps away
-//' from \code{start}.
+//' @return A numeric vector containing node indices of nodes \code{k} or fewer
+//' steps away from \code{start}.
+//' @examples
+//'
+//' # generate watts strogatz graph
+//' network = grow_ws(n = 100, k = 10, p = .5)
+//'
+//' # get neighborhood of second node
+//' get_kneighbors(network, 2)
+//'
+//' # get 3-hop neighborhood of second node
+//' get_kneighbors(network, 2, k = 3)
 //'
 //' @export
 // [[Rcpp::export]]
-std::vector<int> get_kneighbors(NumericMatrix adj, int start, int k){
+std::vector<int> get_kneighbors(NumericMatrix adj, int start, int k = 1){
   int ik = 1, n = adj.nrow();
   std::vector<int> todos;
   std::vector<int> new_todos;

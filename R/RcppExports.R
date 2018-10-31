@@ -104,6 +104,37 @@ pbinom <- function(k, n, p) {
 #' @return
 #' A matrix
 #'
+#' @references
+#'
+#' Goñi, J., Arrondo, G., Sepulcre, J., Martincorena, I., de Mendizábal, N. V.,
+#' Corominas-Murtra, B., ... & Villoslada, P. (2011). The semantic organization
+#' of the animal category: evidence from semantic verbal fluency and network
+#' theory. Cognitive processing, 12(2), 183-196.
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' @examples
+#'
+#' # get animal fluency data
+#' data(animal_fluency)
+#'
+#' # infer influence network
+#' inferred_network = community_graph(animal_fluency)
+#'
+#' # Simulate -----
+#'
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 200, k = 10, p = .5)
+#'
+#' # generate fluency data
+#' # sets string equal TRUE as community_graph expects mode character
+#' fluency_data = fluency(get_adjlist(network), rep(10, 100), string = TRUE)
+#'
+#' # infer fluency network
+#' inferred_network = community_graph(fluency_data)
+#'
 #' @export
 community_graph <- function(dat, l = 3L, min_cooc = 2L, crit = .05) {
     .Call('_memnet_community_graph', PACKAGE = 'memnet', dat, l, min_cooc, crit)
@@ -118,6 +149,36 @@ community_graph <- function(dat, l = 3L, min_cooc = 2L, crit = .05) {
 #'
 #' @return
 #' A matrix
+#'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Zemla, J. C., & Austerweil, J. L. (2018). Estimating semantic networks of
+#' groups and individuals from fluency data. Computational Brain & Behavior,
+#' 1-23.
+#'
+#' @examples
+#'
+#' # get animal fluency data
+#' data(animal_fluency)
+#'
+#' # infer influence network
+#' inferred_network = rw_graph(animal_fluency)
+#'
+#' # Simulate -----
+#'
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 200, k = 10, p = .5)
+#'
+#' # generate fluency data
+#' # sets string equal TRUE as community_graph expects mode character
+#' fluency_data = fluency(get_adjlist(network), rep(10, 100), string = TRUE)
+#'
+#' # infer fluency network
+#' inferred_network = rw_graph(fluency_data)
 #'
 #' @export
 rw_graph <- function(dat) {
@@ -137,9 +198,43 @@ rw_graph <- function(dat) {
 #' @return
 #' A matrix
 #'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Zemla, J. C., & Austerweil, J. L. (2018). Estimating semantic networks of
+#' groups and individuals from fluency data. Computational Brain & Behavior,
+#' 1-23.
+#'
+#' @examples
+#'
+#' # get animal fluency data
+#' data(animal_fluency)
+#'
+#' # infer influence network
+#' inferred_network = threshold_graph(animal_fluency)
+#'
+#' # Simulate -----
+#'
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 200, k = 10, p = .5)
+#'
+#' # generate fluency data
+#' # sets string equal TRUE as community_graph expects mode character
+#' fluency_data = fluency(get_adjlist(network), rep(10, 100), string = TRUE)
+#'
+#' # infer fluency network
+#' inferred_network = threshold_graph(fluency_data)
+#'
 #' @export
 threshold_graph <- function(dat, min_cooc = 2L) {
     .Call('_memnet_threshold_graph', PACKAGE = 'memnet', dat, min_cooc)
+}
+
+shuffle <- function(v) {
+    .Call('_memnet_shuffle', PACKAGE = 'memnet', v)
 }
 
 seed <- function(n, m) {
@@ -180,8 +275,25 @@ selectnode_power <- function(ps, power) {
 #'
 #' @return n x n adjacency matrix.
 #'
-#' @export
+#' @references
+#' Steyvers, M., & Tenenbaum, J. B. (2005). The large‐scale structure of
+#' semantic networks: Statistical analyses and a model of semantic growth.
+#' Cognitive science, 29(1), 41-78.
 #'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' @examples
+#' # generate small graph
+#' grow_st(n = 6, m = 2)
+#'
+#' \dontrun{
+#' # generate large graph
+#' grow_st(n = 100, m = 10)
+#' }
+#'
+#' @export
 grow_st <- function(n = 100L, m = 5L) {
     .Call('_memnet_grow_st', PACKAGE = 'memnet', n, m)
 }
@@ -211,8 +323,23 @@ unconnectedneighbor <- function(adj, from, to) {
 #'
 #' @return n x n adjacency matrix.
 #'
-#' @export
+#' @references
+#' Holme, P., & Kim, B. J. (2002). Growing scale-free networks with tunable
+#' clustering. Physical review E, 65(2), 026107.
 #'
+#' @examples
+#' # generate small graph
+#' grow_hk(n = 6, m = 2, p = .1)
+#'
+#' \dontrun{
+#' # generate large graph, low clustering
+#' grow_hk(n = 100, m = 10, p = .1)
+#'
+#' # generate large graph, high clustering
+#' grow_hk(n = 100, m = 10, p = .9)
+#' }
+#'
+#' @export
 grow_hk <- function(n = 100L, m = 5L, p = 5) {
     .Call('_memnet_grow_hk', PACKAGE = 'memnet', n, m, p)
 }
@@ -229,8 +356,23 @@ grow_hk <- function(n = 100L, m = 5L, p = 5) {
 #'
 #' @return n x n adjacency matrix.
 #'
-#' @export
+#' @references
+#' Barabási, A. L., & Albert, R. (1999). Emergence of scaling in random
+#' networks. Science, 286(5439), 509-512.
 #'
+#' @examples
+#' # generate small graph
+#' grow_ba(n = 6, m = 2)
+#'
+#' \dontrun{
+#' # generate large graph, flat degree distribution
+#' grow_ba(n = 100, m = 10, p = .1)
+#'
+#' # generate large graph, steep degree distribution
+#' grow_ba(n = 100, m = 10, p = 10)
+#' }
+#'
+#' @export
 grow_ba <- function(n = 100L, m = 5L, power = 1) {
     .Call('_memnet_grow_ba', PACKAGE = 'memnet', n, m, power)
 }
@@ -249,8 +391,23 @@ grow_ba <- function(n = 100L, m = 5L, power = 1) {
 #'
 #' @return n x n adjacency matrix.
 #'
-#' @export
+#' @references
+#' Watts, D. J., & Strogatz, S. H. (1998). Collective dynamics of ‘small-world’
+#' networks. Nature, 393(6684), 440-442.
 #'
+#' @examples
+#' # generate small, mildly random graph
+#' grow_ws(n = 6, k = 2, p = .2)
+#'
+#' \dontrun{
+#' # generate large, mildly random graph
+#' grow_ws(n = 100, k = 10, p = .1)
+#'
+#' # generate large, highly random graph
+#' grow_ws(n = 100, k = 10, p = 10)
+#' }
+#'
+#' @export
 grow_ws <- function(n = 100L, k = 10L, p = .2) {
     .Call('_memnet_grow_ws', PACKAGE = 'memnet', n, k, p)
 }
@@ -263,8 +420,20 @@ grow_ws <- function(n = 100L, k = 10L, p = .2) {
 #'
 #' @return n x n adjacency matrix.
 #'
-#' @export
+#' @references
+#' Watts, D. J., & Strogatz, S. H. (1998). Collective dynamics of ‘small-world’
+#' networks. Nature, 393(6684), 440-442.
 #'
+#' @examples
+#' # generate small lattice
+#' grow_lattice(n = 6, k = 2)
+#'
+#' \dontrun{
+#' # generate large lattice
+#' grow_lattice(n = 100, k = 10, p = .1)
+#' }
+#'
+#' @export
 grow_lattice <- function(n = 100L, k = 10L) {
     .Call('_memnet_grow_lattice', PACKAGE = 'memnet', n, k)
 }
@@ -290,6 +459,14 @@ rint <- function(n) {
 #'
 #' @return A list of vectors containing the indices of adjacent nodes.
 #'
+#' @examples
+#'
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 6, k = 2, p = .5)
+#'
+#' # transform to adjlist
+#' get_adjlist(network)
+#'
 #' @export
 get_adjlist <- function(adj) {
     .Call('_memnet_get_adjlist', PACKAGE = 'memnet', adj)
@@ -306,11 +483,23 @@ get_adjlist <- function(adj) {
 #' @param start integer specifying the row of the start node in the adjacency matrix.
 #' @param k integer specifying the maximum distance to the start node.
 #'
-#' @return A character vector containing nodes \code{k} or fewer steps away
-#' from \code{start}.
+#' @return A numeric matrix of two columns containing nodes indices and the
+#' geodesic distance to the start nodes of all nodes \code{k} or fewer steps
+#' away from \code{start}.
+#'
+#' @examples
+#'
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10, p = .5)
+#'
+#' # get neighborhood of second node
+#' get_neighborhood(network, 2)
+#'
+#' # get 3-hop neighborhood of second node
+#' get_neighborhood(network, 2, k = 3)
 #'
 #' @export
-get_neighborhood <- function(adj, start, k) {
+get_neighborhood <- function(adj, start, k = 1L) {
     .Call('_memnet_get_neighborhood', PACKAGE = 'memnet', adj, start, k)
 }
 
@@ -326,11 +515,21 @@ get_neighborhood <- function(adj, start, k) {
 #'   adjacency matrix.
 #' @param k integer specifying the exact distance to the start node.
 #'
-#' @return A character vector containing nodes \code{k} or fewer steps away
-#' from \code{start}.
+#' @return A numeric vector containing node indices of nodes \code{k} or fewer
+#' steps away from \code{start}.
+#' @examples
+#'
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10, p = .5)
+#'
+#' # get neighborhood of second node
+#' get_kneighbors(network, 2)
+#'
+#' # get 3-hop neighborhood of second node
+#' get_kneighbors(network, 2, k = 3)
 #'
 #' @export
-get_kneighbors <- function(adj, start, k) {
+get_kneighbors <- function(adj, start, k = 1L) {
     .Call('_memnet_get_kneighbors', PACKAGE = 'memnet', adj, start, k)
 }
 
@@ -352,6 +551,14 @@ get_names_i <- function(edg) {
 
 noverk <- function(n, k) {
     .Call('_memnet_noverk', PACKAGE = 'memnet', n, k)
+}
+
+smpl <- function(ps) {
+    .Call('_memnet_smpl', PACKAGE = 'memnet', ps)
+}
+
+my_to_string <- function(value) {
+    .Call('_memnet_my_to_string', PACKAGE = 'memnet', value)
 }
 
 to_str <- function(items) {
@@ -404,8 +611,30 @@ add_1 <- function(items) {
 #'   Indices refer to the row of the item in the original adjacency matrix. See
 #'   \link{get_adjlist}.
 #'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+#' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+#' inspired mechanism for network exploration. International Journal of
+#' Bifurcation and Chaos, 20(03), 913-922.
+#'
+#' @examples
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10)
+#'
+#' # create verbal fluency sequence
+#' one_fluency(get_adjlist(network), 10)
+#'
+#' # create verbal fluency sequence
+#' # with high jump probability
+#' one_fluency(get_adjlist(network), 10, pjump = .5)
+#'
 #' @export
-one_fluency <- function(adj_list, n, pjump, type) {
+one_fluency <- function(adj_list, n, pjump = 0, type = 0L) {
     .Call('_memnet_one_fluency', PACKAGE = 'memnet', adj_list, n, pjump, type)
 }
 
@@ -425,6 +654,28 @@ one_fluency <- function(adj_list, n, pjump, type) {
 #' @return List of character vectors containing the indices of the fluency productions.
 #'   Indices refer to the row of the item in the original adjacency matrix. See
 #'   \link{get_adjlist}.
+#'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+#' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+#' inspired mechanism for network exploration. International Journal of
+#' Bifurcation and Chaos, 20(03), 913-922.
+#'
+#' @examples
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 3)
+#'
+#' # create verbal fluency sequences
+#' fluency(get_adjlist(network), c(10, 10))
+#'
+#' # create verbal fluency sequence
+#' # with high jump probability
+#' fluency(get_adjlist(network), c(10, 10), pjump = .5)
 #'
 #' @export
 fluency <- function(adjlist, n, pjump = 0, type = 0L, string = FALSE) {
@@ -456,8 +707,30 @@ fluency <- function(adjlist, n, pjump = 0, type = 0L, string = FALSE) {
 #'   Indices refer to the row of the item in the original adjacency matrix. See
 #'   \link{get_adjlist}.
 #'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+#' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+#' inspired mechanism for network exploration. International Journal of
+#' Bifurcation and Chaos, 20(03), 913-922.
+#'
+#' @examples
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10)
+#'
+#' # create verbal fluency sequences
+#' one_ffluency(get_adjlist(network),  10)
+#'
+#' # create verbal fluency sequence
+#' # with high jump probability
+#' one_ffluency(get_adjlist(network), 10, pjump = .5)
+#'
 #' @export
-one_ffluency <- function(adj_list, n, pjump, type) {
+one_ffluency <- function(adj_list, n, pjump = 0, type = 0L) {
     .Call('_memnet_one_ffluency', PACKAGE = 'memnet', adj_list, n, pjump, type)
 }
 
@@ -477,9 +750,31 @@ one_ffluency <- function(adj_list, n, pjump, type) {
 #'   Indices refer to the row of the item in the original adjacency matrix. See
 #'   \link{get_adjlist}.
 #'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+#' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+#' inspired mechanism for network exploration. International Journal of
+#' Bifurcation and Chaos, 20(03), 913-922.
+#'
+#' @examples
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10)
+#'
+#' # create verbal fluency sequences
+#' ffluency(get_adjlist(network), c(10, 10))
+#'
+#' # create verbal fluency sequence
+#' # with high jump probability
+#' ffluency(get_adjlist(network), c(10, 10), pjump = .5)
+#'
 #' @export
-ffsearch <- function(adjlist, n, pjump = 0, type = 0L, string = FALSE) {
-    .Call('_memnet_ffsearch', PACKAGE = 'memnet', adjlist, n, pjump, type, string)
+ffluency <- function(adjlist, n, pjump = 0, type = 0L, string = FALSE) {
+    .Call('_memnet_ffluency', PACKAGE = 'memnet', adjlist, n, pjump, type, string)
 }
 
 #' Verbal fluency step counter
@@ -506,8 +801,30 @@ ffsearch <- function(adjlist, n, pjump = 0, type = 0L, string = FALSE) {
 #'   Indices refer to the row of the item in the original adjacency matrix. See
 #'   \link{get_adjlist}.
 #'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+#' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+#' inspired mechanism for network exploration. International Journal of
+#' Bifurcation and Chaos, 20(03), 913-922.
+#'
+#' @examples
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10)
+#'
+#' # count number of steps needed to create sequence
+#' one_fluency_steps(get_adjlist(network), 10)
+#'
+#' # count number of steps needed to create sequence
+#' # with high jump probability
+#' one_fluency_steps(get_adjlist(network), 10, pjump = .5)
+#'
 #' @export
-one_fluency_steps <- function(adj_list, n, pjump, type) {
+one_fluency_steps <- function(adj_list, n, pjump = 0, type = 0L) {
     .Call('_memnet_one_fluency_steps', PACKAGE = 'memnet', adj_list, n, pjump, type)
 }
 
@@ -525,6 +842,28 @@ one_fluency_steps <- function(adj_list, n, pjump, type) {
 #' @return List of character vectors containing the indices of the fluency productions.
 #'   Indices refer to the row of the item in the original adjacency matrix. See
 #'   \link{get_adjlist}.
+#'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+#' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+#' inspired mechanism for network exploration. International Journal of
+#' Bifurcation and Chaos, 20(03), 913-922.
+#'
+#' @examples
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10)
+#'
+#' # count number of steps needed to create sequence
+#' fluency_steps(get_adjlist(network), c(10, 10))
+#'
+#' # count number of steps needed to create sequence
+#' # with high jump probability
+#' fluency_steps(get_adjlist(network), c(10, 10), pjump = .5)
 #'
 #' @export
 fluency_steps <- function(adjlist, n, pjump = 0, type = 0L) {
@@ -550,6 +889,29 @@ fluency_steps <- function(adjlist, n, pjump = 0, type = 0L) {
 #' @return Numeric, 3 column matrix containing in each row the start node, the
 #' end node, and the (minimum) number of steps it took to reach the end node
 #' from the start node.
+#'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+#' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+#' inspired mechanism for network exploration. International Journal of
+#' Bifurcation and Chaos, 20(03), 913-922.
+#'
+#' @examples
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10)
+#'
+#' # observe number of steps from node 2
+#' # to nodes 3, 4, and 5
+#' one_search(get_adjlist(network), 2, c(3, 4, 5))
+#'
+#' # observe number of steps from node 2 to nodes 3, 4, and 5
+#' # with high jump probability
+#' one_search(get_adjlist(network), start = 2, observe = c(3, 4, 5), pjump = .5)
 #'
 #' @export
 one_search <- function(adj_list, start, observe, nmax = 1000L, pjump = 0, type = 0L) {
@@ -577,6 +939,29 @@ one_search <- function(adj_list, start, observe, nmax = 1000L, pjump = 0, type =
 #' end node, and the (minimum) number of steps it took to reach the end node
 #' from the start node.
 #'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+#' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+#' inspired mechanism for network exploration. International Journal of
+#' Bifurcation and Chaos, 20(03), 913-922.
+#'
+#' @examples
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10)
+#'
+#' # observe number of steps from node 2 and 6
+#' # to nodes 3, 4, and 5
+#' search_rw(get_adjlist(network), c(2, 6), c(3, 4, 5))
+#'
+#' # observe number of steps from node 2 and 6 to nodes 3, 4, and 5
+#' # with high jump probability
+#' search_rw(get_adjlist(network), start = c(2, 6), observe = c(3, 4, 5), pjump = .5)
+#'
 #' @export
 search_rw <- function(adjlist, start, observe, nmax = 1000L, pjump = 0, type = 0L) {
     .Call('_memnet_search_rw', PACKAGE = 'memnet', adjlist, start, observe, nmax, pjump, type)
@@ -603,6 +988,29 @@ search_rw <- function(adjlist, start, observe, nmax = 1000L, pjump = 0, type = 0
 #'
 #' @return Numeric, 3 column matrix containing in each row the start node, the end node, and
 #' the (minimum) number of steps it took to reach the end node from the start node.
+#'
+#' @references
+#'
+#' Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+#' differences in the semantic networks of younger and older adults.
+#' https://doi.org/10.31234/osf.io/s73dp
+#'
+#' Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+#' Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+#' inspired mechanism for network exploration. International Journal of
+#' Bifurcation and Chaos, 20(03), 913-922.
+#'
+#' @examples
+#' # generate watts strogatz graph
+#' network = grow_ws(n = 100, k = 10)
+#'
+#' # determine mean number of steps from node 2 and 6
+#' # to nodes 3, 4, and 5
+#' search_rw_mean(get_adjlist(network), c(2, 6), c(3, 4, 5))
+#'
+#' # determine mean number of steps from node 2 and 6 to nodes 3, 4, and 5
+#' # with high jump probability
+#' search_rw_mean(get_adjlist(network), start = c(2, 6), observe = c(3, 4, 5), pjump = .5)
 #'
 #' @export
 search_rw_mean <- function(adjlist, start, observe, nmax = 1000L, pjump = 0, type = 0L, nrep = 100L) {

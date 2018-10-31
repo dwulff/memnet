@@ -4,7 +4,7 @@
 \alias{one_ffluency}
 \title{Fast verbal fluency generator}
 \usage{
-one_ffluency(adj_list, n, pjump, type)
+one_ffluency(adj_list, n, pjump = 0, type = 0L)
 }
 \arguments{
 \item{adj_list}{a list containing row indices of nodes adjacent node to the ith
@@ -43,4 +43,26 @@ whether the sampled neighbor is already in the list of productions. Instead,
 \code{ffluency} simply returns the list of unique productions. This means
 that if repetitions occur \code{ffluency} will produce sequences of length
 \code{min(n * 3 - k, n)} where k is the number of repeptitions.
+}
+\examples{
+# generate watts strogatz graph
+network = grow_ws(n = 100, k = 10)
+
+# create verbal fluency sequences
+one_ffluency(get_adjlist(network),  10)
+
+# create verbal fluency sequence
+# with high jump probability
+one_ffluency(get_adjlist(network), 10, pjump = .5)
+
+}
+\references{
+Wulff, D. U., Hills, T., & Mata, R. (2018, October 29). Structural
+differences in the semantic networks of younger and older adults.
+https://doi.org/10.31234/osf.io/s73dp
+
+Goñi, J., Martincorena, I., Corominas-Murtra, B., Arrondo, G., Ardanza-
+Trevijano, S., & Villoslada, P. (2010). Switcher-random-walks: A cognitive-
+inspired mechanism for network exploration. International Journal of
+Bifurcation and Chaos, 20(03), 913-922.
 }

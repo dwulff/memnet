@@ -4,7 +4,7 @@
 \alias{get_kneighbors}
 \title{Get vector of neighbors exactly k steps away}
 \usage{
-get_kneighbors(adj, start, k)
+get_kneighbors(adj, start, k = 1L)
 }
 \arguments{
 \item{adj}{numeric matrix specifying the adjacency matrix.}
@@ -15,8 +15,8 @@ adjacency matrix.}
 \item{k}{integer specifying the exact distance to the start node.}
 }
 \value{
-A character vector containing nodes \code{k} or fewer steps away
-from \code{start}.
+A numeric vector containing node indices of nodes \code{k} or fewer
+steps away from \code{start}.
 }
 \description{
 Function iterates over graph to identify for a given node all nodes that are
@@ -24,4 +24,16 @@ exactly k steps apart.
 }
 \details{
 \code{k < 1} will be set to \code{k = 1}.
+}
+\examples{
+
+# generate watts strogatz graph
+network = grow_ws(n = 100, k = 10, p = .5)
+
+# get neighborhood of second node
+get_kneighbors(network, 2)
+
+# get 3-hop neighborhood of second node
+get_kneighbors(network, 2, k = 3)
+
 }

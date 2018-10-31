@@ -15,8 +15,18 @@
 #' @return a numeric n x n adjacency matrix with n being the number of unique
 #'   entries in \code{edg}.
 #'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge list of fluency graph
+#' edge_list = threshold_graph(animal_fluency[1:3])
+#'
+#' # transfrom to adjacency matrix
+#' edg_to_adj(edge_list)
+#'
 #' @export
-
 edg_to_adj = function(edg, weight = NULL, directed = FALSE, adjlist = FALSE){
 
   # unique entries
@@ -59,6 +69,17 @@ edg_to_adj = function(edg, weight = NULL, directed = FALSE, adjlist = FALSE){
 #' @return a numeric n x n adjacency matrix with n being the number of unique
 #'   entries in \code{edg}.
 #'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge list of fluency graph
+#' edge_list = threshold_graph(animal_fluency[1:3])
+#'
+#' # transfrom to adjacency matrix
+#' edg_to_adjlist(edge_list)
+#'
 #' @export
 edg_to_adjlist = function(edg){
 
@@ -76,6 +97,21 @@ edg_to_adjlist = function(edg){
 #' @param names character vector giving the names.
 #'
 #' @return lists of character vectors.
+#'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge list of fluency graph
+#' edge_list = threshold_graph(animal_fluency)
+#'
+#' # extract adjlist from community network
+#' adjlist = edg_to_adjlist(edge_list)
+#'
+#  simulate fluency sequences
+#' f = fluency(adjlist, c(10, 14, 16, 18))
+#' restore_names(f, get_names(edge_list))
 #'
 #' @export
 restore_names = function(dat, names){
@@ -138,6 +174,17 @@ restore_names = function(dat, names){
 #'   matrix.
 #'
 #' @return lists of character vectors.
+#'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge list of fluency graph
+#' edge_list = threshold_graph(animal_fluency)
+#'
+#' # get names
+#' get_names(edge_list)
 #'
 #' @export
 get_names = function(dat){

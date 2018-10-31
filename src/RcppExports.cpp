@@ -292,6 +292,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// shuffle
+std::vector<int> shuffle(std::vector<int>& v);
+RcppExport SEXP _memnet_shuffle(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<int>& >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(shuffle(v));
+    return rcpp_result_gen;
+END_RCPP
+}
 // seed
 NumericMatrix seed(int n, int m);
 RcppExport SEXP _memnet_seed(SEXP nSEXP, SEXP mSEXP) {
@@ -597,6 +608,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// smpl
+int smpl(std::vector<double> ps);
+RcppExport SEXP _memnet_smpl(SEXP psSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<double> >::type ps(psSEXP);
+    rcpp_result_gen = Rcpp::wrap(smpl(ps));
+    return rcpp_result_gen;
+END_RCPP
+}
+// my_to_string
+std::string my_to_string(int value);
+RcppExport SEXP _memnet_my_to_string(SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(my_to_string(value));
+    return rcpp_result_gen;
+END_RCPP
+}
 // to_str
 Rcpp::CharacterVector to_str(std::vector<int> items);
 RcppExport SEXP _memnet_to_str(SEXP itemsSEXP) {
@@ -707,9 +740,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ffsearch
-GenericVector ffsearch(GenericVector adjlist, NumericVector n, double pjump, int type, bool string);
-RcppExport SEXP _memnet_ffsearch(SEXP adjlistSEXP, SEXP nSEXP, SEXP pjumpSEXP, SEXP typeSEXP, SEXP stringSEXP) {
+// ffluency
+GenericVector ffluency(GenericVector adjlist, NumericVector n, double pjump, int type, bool string);
+RcppExport SEXP _memnet_ffluency(SEXP adjlistSEXP, SEXP nSEXP, SEXP pjumpSEXP, SEXP typeSEXP, SEXP stringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -718,7 +751,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type pjump(pjumpSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
     Rcpp::traits::input_parameter< bool >::type string(stringSEXP);
-    rcpp_result_gen = Rcpp::wrap(ffsearch(adjlist, n, pjump, type, string));
+    rcpp_result_gen = Rcpp::wrap(ffluency(adjlist, n, pjump, type, string));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -825,6 +858,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_community_graph", (DL_FUNC) &_memnet_community_graph, 4},
     {"_memnet_rw_graph", (DL_FUNC) &_memnet_rw_graph, 1},
     {"_memnet_threshold_graph", (DL_FUNC) &_memnet_threshold_graph, 2},
+    {"_memnet_shuffle", (DL_FUNC) &_memnet_shuffle, 1},
     {"_memnet_seed", (DL_FUNC) &_memnet_seed, 2},
     {"_memnet_sm", (DL_FUNC) &_memnet_sm, 1},
     {"_memnet_getdegrees", (DL_FUNC) &_memnet_getdegrees, 2},
@@ -851,6 +885,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_get_names_c", (DL_FUNC) &_memnet_get_names_c, 1},
     {"_memnet_get_names_i", (DL_FUNC) &_memnet_get_names_i, 1},
     {"_memnet_noverk", (DL_FUNC) &_memnet_noverk, 2},
+    {"_memnet_smpl", (DL_FUNC) &_memnet_smpl, 1},
+    {"_memnet_my_to_string", (DL_FUNC) &_memnet_my_to_string, 1},
     {"_memnet_to_str", (DL_FUNC) &_memnet_to_str, 1},
     {"_memnet_getneighbors", (DL_FUNC) &_memnet_getneighbors, 2},
     {"_memnet_getnext", (DL_FUNC) &_memnet_getnext, 1},
@@ -860,7 +896,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_memnet_one_fluency", (DL_FUNC) &_memnet_one_fluency, 4},
     {"_memnet_fluency", (DL_FUNC) &_memnet_fluency, 5},
     {"_memnet_one_ffluency", (DL_FUNC) &_memnet_one_ffluency, 4},
-    {"_memnet_ffsearch", (DL_FUNC) &_memnet_ffsearch, 5},
+    {"_memnet_ffluency", (DL_FUNC) &_memnet_ffluency, 5},
     {"_memnet_one_fluency_steps", (DL_FUNC) &_memnet_one_fluency_steps, 4},
     {"_memnet_fluency_steps", (DL_FUNC) &_memnet_fluency_steps, 4},
     {"_memnet_one_search", (DL_FUNC) &_memnet_one_search, 6},

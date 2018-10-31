@@ -2,6 +2,7 @@
 #define __UTILITIES__
 
 
+
 //////////////////////////////////////////////////////////////////////////////
 //
 //          GENERIC UTILITIES
@@ -57,33 +58,33 @@ inline int rndint(int n){
 }
 
 // allocate
-inline Rcpp::NumericVector allct(int n, int g, int mx){
-  int i = 0, grs;
-  int total = n - g;
-  if(mx < 1) mx = 1;
-  Rcpp::NumericVector sizes(g);
-  while( i < (g-1) ){
-    if(total > 0){
-      if(total >= mx) {
-        grs = rndint(mx-1);
-        sizes[i] = grs + 1;
-        } else {
-        grs = rndint(total-1);
-        sizes[i] = grs + 1;
-        }
-      total = total - grs;
-      } else {
-      sizes[i] = 1;
-      }
-    i++;
-    }
-  if(total > 0){
-    sizes[i] = total + 1;
-    } else {
-    sizes[i] = 1;
-    }
-  return sizes;
-  }
+//inline Rcpp::NumericVector allct(int n, int g, int mx){
+//  int i = 0, grs;
+// int total = n - g;
+// if(mx < 1) mx = 1;
+//  Rcpp::NumericVector sizes(g);
+//  while( i < (g-1) ){
+//    if(total > 0){
+//      if(total >= mx) {
+//        grs = rndint(mx-1);
+//        sizes[i] = grs + 1;
+//        } else {
+//        grs = rndint(total-1);
+//        sizes[i] = grs + 1;
+//        }
+//      total = total - grs;
+//      } else {
+//      sizes[i] = 1;
+//      }
+//    i++;
+//    }
+//  if(total > 0){
+//    sizes[i] = total + 1;
+//    } else {
+//    sizes[i] = 1;
+//    }
+//  return sizes;
+//  }
 
 // draw random integer between 0 and (n-1)
 int rint(int n);
@@ -92,23 +93,13 @@ int rint(int n);
 double runi();
 
 // sampl according to vector of values (interpreted as proportional to probability)
-inline int smpl(std::vector<double> ps){
-  int k, i = 0, n = ps.size();
-  double v, sum = 0, r = double(std::rand()) / RAND_MAX;
-  for(k = 0; k < n; k++){
-    sum += ps[k];
-    }
-  v = ps[0] / double(sum);
-  while(i < n && v <= r){
-    i++;
-    v += ps[i] / double(sum);
-    }
-  return i;
-  }
+int smpl(std::vector<double> ps);
 
 // unique
 std::vector<int> unique_int(std::vector<int> v);
 
+// shuffle
+std::vector<int> shuffle(std::vector<int> & v);
 
 //////////////////////////////////////////////////////////////////////////////
 //

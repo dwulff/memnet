@@ -61,3 +61,20 @@ nothing. A plot is created in \link{dev.cur}.
 \description{
 Custom graph plot using \code{igraph}'s layout functions.
 }
+\examples{
+
+\dontrun{
+# get fluency data
+data(animal_fluency)
+
+# edge list of fluency graph
+edge_list = threshold_graph(animal_fluency[1:20])
+
+# get adjacency matrix
+adj = edg_to_adj(edge_list)
+
+# plot
+network_plot(adj)
+}
+
+}

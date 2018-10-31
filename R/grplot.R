@@ -52,6 +52,17 @@ circle = function(rad, orig, ..., n = 100){
 #' @return A vector of length \code{max(length(col_1), length(col_2))} containing the
 #' mixed colors in the specified format.
 #'
+#' @examples
+#'
+#' # mix blue and red with more weight on blue
+#' cmix('blue', 'red', .2)
+#'
+#' # mix blue and red with more weight on red
+#' cmix('blue', 'red', .8)
+#'
+#' # mix blue and red and return as rgb
+#' cmix('blue', 'red', .8, format = 'rgb')
+#'
 #' @export
 cmix = function(col_1, col_2, weight, format = 'hex'){
 
@@ -259,6 +270,22 @@ set_saturation = function(col, saturation = .5){
 #'   labels and between labels and nodes on the x and y dimension.
 #'
 #' @return nothing. A plot is created in \link{dev.cur}.
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge list of fluency graph
+#' edge_list = threshold_graph(animal_fluency[1:20])
+#'
+#' # get adjacency matrix
+#' adj = edg_to_adj(edge_list)
+#'
+#' # plot
+#' network_plot(adj)
+#' }
 #'
 #' @export
 network_plot = function(adj,
@@ -471,8 +498,24 @@ network_plot = function(adj,
 #'
 #' @return nothing. A plot is created in \link{dev.cur}.
 #'
+#'@examples
+#'
+#' \dontrun{
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge list of fluency graph
+#' edge_list = threshold_graph(animal_fluency[1:40])
+#'
+#' # get adjacency matrix
+#' adj = edg_to_adj(edge_list)
+#'
+#' # plot
+#' neighborhood_plot(adj, node = 'dog', k = 2)
+#' }
+#'
 #' @export
-neighborhood_plot = function(adj, names = NULL, node, k, nod_col = "#E0EED4", nod_shading = TRUE, ...){
+neighborhood_plot = function(adj, names = NULL, node, k = 2, nod_col = "#E0EED4", nod_shading = TRUE, ...){
 
   # names function
   get_graph_names = function(g, names){

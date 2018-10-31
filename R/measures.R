@@ -17,6 +17,20 @@
 #' indicating the size of the largest component relative to
 #' to the entire graph.
 #'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge list of fluency graph
+#' edge_list = threshold_graph(animal_fluency[1:10])
+#'
+#' # get adjacency matrix
+#' adj = edg_to_adj(edge_list)
+#'
+#' # get largest component
+#' l_comp(adj)
+#'
 #' @export
 l_comp = function(adj, weights = NULL, mode = 'undirected', igraph = FALSE){
 
@@ -68,10 +82,25 @@ l_comp = function(adj, weights = NULL, mode = 'undirected', igraph = FALSE){
 #' @param mode_1,mode_2 character, either \code{"directed"} or \code{"undirected"},
 #'   specifying whether network 1 and 2 should be interepeted as directed
 #'   or undirected, respectively. Defaults to \code{"undirected"}.
-
 #'
 #' @return
 #' Distance between cumulative degree distributions.
+#'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge lists of fluency graphs
+#' edge_list_1 = threshold_graph(animal_fluency[1:100])
+#' edge_list_2 = threshold_graph(animal_fluency[101:200])
+#'
+#' # get adjacency matrices
+#' adj_1 = edg_to_adj(edge_list_1)
+#' adj_2 = edg_to_adj(edge_list_2)
+#'
+#' # get max degree distance
+#' k_dist(adj_1, adj_2)
 #'
 #' @export
 k_dist = function(adj_1, adj_2,
@@ -112,6 +141,23 @@ k_dist = function(adj_1, adj_2,
 #'
 #' @return the corrected local clustering coefficient and/or
 #' the uncorrected clustering coefficient.
+#'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge lists of fluency graphs
+#' edge_list = threshold_graph(animal_fluency)
+#'
+#' # get adjacency matrices
+#' adj = edg_to_adj(edge_list)
+#'
+#' # get local average clustering coefficient
+#' alc(adj)
+#'
+#' # get corrected local average clustering coefficient
+#' alc(adj, types = 'corrected')
 #'
 #' @export
 alc = function(adj, types = 'uncorrected', weights = NULL, mode = 'undirected'){
@@ -158,6 +204,23 @@ alc = function(adj, types = 'uncorrected', weights = NULL, mode = 'undirected'){
 #'
 #' @return Local clustering coefficient.
 #'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge lists of fluency graphs
+#' edge_list = threshold_graph(animal_fluency)
+#'
+#' # get adjacency matrices
+#' adj = edg_to_adj(edge_list)
+#'
+#' # get average shortest path length
+#' aspl(adj)
+#'
+#' # get corrected average shortest path length
+#' aspl(adj, types = 'corrected')
+#'
 #' @export
 aspl = function(adj, types = 'uncorrected', weights = NULL, mode = 'undirected'){
 
@@ -202,6 +265,20 @@ aspl = function(adj, types = 'uncorrected', weights = NULL, mode = 'undirected')
 #'   largest component.
 #'
 #' @return A named numeric vector containing the computed network statistics.
+#'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge lists of fluency graphs
+#' edge_list = threshold_graph(animal_fluency)
+#'
+#' # get adjacency matrices
+#' adj = edg_to_adj(edge_list)
+#'
+#' # get structural overview
+#' network_stats(adj)
 #'
 #' @export
 network_stats = function(adj, giant = FALSE, weights = NULL, mode = 'undirected'){
@@ -250,6 +327,22 @@ network_stats = function(adj, giant = FALSE, weights = NULL, mode = 'undirected'
 #' @inheritParams k_dist
 #'
 #' @return List containing the two subgraphs.
+#'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge lists of fluency graphs
+#' edge_list_1 = threshold_graph(animal_fluency[1:100])
+#' edge_list_2 = threshold_graph(animal_fluency[101:200])
+#'
+#' # get adjacency matrices
+#' adj_1 = edg_to_adj(edge_list_1)
+#' adj_2 = edg_to_adj(edge_list_2)
+#'
+#' # get common subgraph
+#' common_subgraphs(adj_1, adj_2)
 #'
 #' @export
 common_subgraphs = function(adj_1, adj_2,
@@ -302,6 +395,22 @@ common_subgraphs = function(adj_1, adj_2,
 #' @inheritParams network_stats
 #'
 #' @return List containing the two subgraphs.
+#'
+#' @examples
+#'
+#' # get fluency data
+#' data(animal_fluency)
+#'
+#' # edge lists of fluency graphs
+#' edge_list_1 = threshold_graph(animal_fluency[1:100])
+#' edge_list_2 = threshold_graph(animal_fluency[101:200])
+#'
+#' # get adjacency matrices
+#' adj_1 = edg_to_adj(edge_list_1)
+#' adj_2 = edg_to_adj(edge_list_2)
+#'
+#' # get structural overview of both networks
+#' common_subgraph_stats(adj_1, adj_2)
 #'
 #' @export
 common_subgraph_stats = function(adj_1, adj_2,
